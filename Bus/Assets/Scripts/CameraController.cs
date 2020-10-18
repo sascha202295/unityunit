@@ -32,7 +32,8 @@ public class CameraController : MonoBehaviour
     
     mouseY = Mathf.Clamp(mouseY, -35, 60);
         transform.LookAt(target);
-
+        target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+        /*
         if (Input.GetKey(KeyCode.CapsLock))
         {
             target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
@@ -42,6 +43,6 @@ public class CameraController : MonoBehaviour
             target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
 
         }
-
+        */
     }
 }

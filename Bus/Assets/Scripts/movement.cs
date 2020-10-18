@@ -3,49 +3,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class movement : MonoBehaviour
+public class Movement : MonoBehaviour
 {
-    private float horizontalInput;
-    private float verticalInput;
+    private float hInput;
+    private float vInput;
     private float steerAngle;
     private bool isBreaking;
+    private float brakeForce = 0f;
 
-    public WheelCollider frontLeftWheelCollider;
-    public WheelCollider frontRightWheelCollider;
-    public WheelCollider rearLeftWheelCollider;
-    public WheelCollider rearRightWheelCollider;
-    public Transform frontLeftWheelTransform;
-    public Transform frontRightWheelTransform;
-    public Transform rearLeftWheelTransform;
-    public Transform rearRightWheelTransform;
-
+    private WheelCollider frontLeftWheelCollider;
+    private WheelCollider frontRightWheelCollider;
+    private WheelCollider rearLeftWheelCollider;
+    private WheelCollider rearRightWheelCollider;
+    private Transform frontLeftWheelTransform;
+    private Transform frontRightWheelTransform;
+    private Transform rearLeftWheelTransform;
+    private Transform rearRightWheelTransform;
+    
     public float maxSteeringAngle = 30f;
-    public float motorForce = 50f;
-    public float brakeForce = 0f;
+    public float motorForce = 1000f;
+    
 
-
+    private void Start()
+    {
+        frontLeftWheelCollider = GameObject.Find("f_l Colider").GetComponent<WheelCollider>();
+        frontRightWheelCollider = GameObject.Find("f_r Colider").GetComponent<WheelCollider>();
+        rearLeftWheelCollider = GameObject.Find("r_l Colider").GetComponent<WheelCollider>();
+        rearRightWheelCollider = GameObject.Find("r_r Colider").GetComponent<WheelCollider>();
+        frontLeftWheelTransform = GameObject.Find("f_l").GetComponent<Transform>();
+        frontRightWheelTransform = GameObject.Find("f_r").GetComponent<Transform>();
+        rearLeftWheelTransform = GameObject.Find("r_l").GetComponent<Transform>();
+        rearRightWheelTransform = GameObject.Find("r_r").GetComponent<Transform>();
+    }
     private void FixedUpdate()
     {
-        GetInput();
-        HandleMotor();
-        HandleSteering();
-        UpdateWheels();
+          
+        input();
+        motor();
+        steering();
+        updateWheels();
+        
     }
 
-    private void GetInput()
+    private void input()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        hInput = Input.GetAxis("Horizontal");
+        vInput = Input.GetAxis("Vertical");
+      //  Debug.Log("hInput: " + hInput + " vInput: " + vInput);
         isBreaking = Input.GetKey(KeyCode.Space);
     }
 
 
-    private void HandleMotor()
+    private void motor()
     {
-        frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-        frontRightWheelCollider.motorTorque = verticalInput * motorForce;
+        frontLeftWheelCollider.motorTorque = vInput * motorForce;
+        frontRightWheelCollider.motorTorque = vInput * motorForce;
 
-        brakeForce = isBreaking ? 3000f : 0f;
+        brakeForce = isBreaking ? 6500f : 0f;
         frontLeftWheelCollider.brakeTorque = brakeForce;
         frontRightWheelCollider.brakeTorque = brakeForce;
         rearLeftWheelCollider.brakeTorque = brakeForce;
@@ -53,30 +67,32 @@ public class movement : MonoBehaviour
     }
 
 
-    private void HandleSteering()
+    private void steering()
     {
-        steerAngle = maxSteeringAngle * horizontalInput;
+        steerAngle = maxSteeringAngle * hInput;
         frontLeftWheelCollider.steerAngle = steerAngle;
         frontRightWheelCollider.steerAngle = steerAngle;
     }
 
 
-    private void UpdateWheels()
+    private void updateWheels()
     {
-        UpdateWheelPos(frontLeftWheelCollider, frontLeftWheelTransform);
-        UpdateWheelPos(frontRightWheelCollider, frontRightWheelTransform);
-        UpdateWheelPos(rearLeftWheelCollider, rearLeftWheelTransform);
-        UpdateWheelPos(rearRightWheelCollider, rearRightWheelTransform);
+        updateWheelPos(frontRightWheelCollider, frontRightWheelTransform);
+        updateWheelPos(frontLeftWheelCollider, frontLeftWheelTransform);
+       
+        updateWheelPos(rearLeftWheelCollider, rearLeftWheelTransform);
+        updateWheelPos(rearRightWheelCollider, rearRightWheelTransform);
     }
 
-    private void UpdateWheelPos(WheelCollider wheelCollider, Transform trans)
+    private void updateWheelPos(WheelCollider collider, Transform trans)
     {
         Vector3 pos;
         Quaternion rot;
-        wheelCollider.GetWorldPose(out pos, out rot);
-        trans.Rotate(0, rot.y, rot.z, Space.World);
-        trans.position.Set(pos.x,pos.y,0);
-      
+        collider.GetWorldPose(out pos, out rot);
+       // Debug.Log("rot: "+rot+" pos: "+pos);
+        trans.rotation = rot;
+       
+        trans.position = pos;
     }
 
 }
