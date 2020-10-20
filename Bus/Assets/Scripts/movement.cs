@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     private WheelCollider frontRightWheelCollider;
     private WheelCollider rearLeftWheelCollider;
     private WheelCollider rearRightWheelCollider;
+
     private Transform frontLeftWheelTransform;
     private Transform frontRightWheelTransform;
     private Transform rearLeftWheelTransform;
@@ -30,6 +31,7 @@ public class Movement : MonoBehaviour
         frontRightWheelCollider = GameObject.Find("f_r Colider").GetComponent<WheelCollider>();
         rearLeftWheelCollider = GameObject.Find("r_l Colider").GetComponent<WheelCollider>();
         rearRightWheelCollider = GameObject.Find("r_r Colider").GetComponent<WheelCollider>();
+      
         frontLeftWheelTransform = GameObject.Find("f_l").GetComponent<Transform>();
         frontRightWheelTransform = GameObject.Find("f_r").GetComponent<Transform>();
         rearLeftWheelTransform = GameObject.Find("r_l").GetComponent<Transform>();
@@ -38,14 +40,14 @@ public class Movement : MonoBehaviour
     private void FixedUpdate()
     {
           
-        input();
-        motor();
-        steering();
-        updateWheels();
+        Input_();
+        Motor();
+        Steering();
+        UpdateWheels();
         
     }
 
-    private void input()
+    private void Input_()
     {
         hInput = Input.GetAxis("Horizontal");
         vInput = Input.GetAxis("Vertical");
@@ -54,12 +56,13 @@ public class Movement : MonoBehaviour
     }
 
 
-    private void motor()
+    private void Motor()
     {
         frontLeftWheelCollider.motorTorque = vInput * motorForce;
         frontRightWheelCollider.motorTorque = vInput * motorForce;
 
         brakeForce = isBreaking ? 6500f : 0f;
+
         frontLeftWheelCollider.brakeTorque = brakeForce;
         frontRightWheelCollider.brakeTorque = brakeForce;
         rearLeftWheelCollider.brakeTorque = brakeForce;
@@ -67,7 +70,7 @@ public class Movement : MonoBehaviour
     }
 
 
-    private void steering()
+    private void Steering()
     {
         steerAngle = maxSteeringAngle * hInput;
         frontLeftWheelCollider.steerAngle = steerAngle;
@@ -75,21 +78,23 @@ public class Movement : MonoBehaviour
     }
 
 
-    private void updateWheels()
+    private void UpdateWheels()
     {
-        updateWheelPos(frontRightWheelCollider, frontRightWheelTransform);
-        updateWheelPos(frontLeftWheelCollider, frontLeftWheelTransform);
-       
-        updateWheelPos(rearLeftWheelCollider, rearLeftWheelTransform);
-        updateWheelPos(rearRightWheelCollider, rearRightWheelTransform);
+        UpdateWheelPos(frontRightWheelCollider, frontRightWheelTransform);
+        UpdateWheelPos(frontLeftWheelCollider, frontLeftWheelTransform);
+
+        UpdateWheelPos(rearLeftWheelCollider, rearLeftWheelTransform);
+        UpdateWheelPos(rearRightWheelCollider, rearRightWheelTransform);
     }
 
-    private void updateWheelPos(WheelCollider collider, Transform trans)
+    private void UpdateWheelPos(WheelCollider collider, Transform trans)
     {
         Vector3 pos;
         Quaternion rot;
         collider.GetWorldPose(out pos, out rot);
-       // Debug.Log("rot: "+rot+" pos: "+pos);
+        // Debug.Log("rot: "+rot+" pos: "+pos);
+   
+        
         trans.rotation = rot;
        
         trans.position = pos;

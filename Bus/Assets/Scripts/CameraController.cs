@@ -6,43 +6,31 @@ public class CameraController : MonoBehaviour
 {
 
     public float RotaionSpeed = 1;
-    public Transform target, bus;
+    private Transform target, Camera;
     float mouseX, mouseY;
 
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        target = GameObject.Find("Target").GetComponent<Transform>();
+        Camera = this.transform;
     }
 
     private void LateUpdate()
     {
-        camControl();
+        CamControl();
     }
-    void camControl() {
+    void CamControl() {
     
-    mouseX += Input.GetAxis("Mouse X")*RotaionSpeed;
-    mouseY -= Input.GetAxis("Mouse Y")*RotaionSpeed;
+        mouseX += Input.GetAxis("Mouse X")*RotaionSpeed;
+        mouseY -= Input.GetAxis("Mouse Y")*RotaionSpeed;
     
-    mouseY = Mathf.Clamp(mouseY, -35, 60);
-        transform.LookAt(target);
-        target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
-        /*
-        if (Input.GetKey(KeyCode.CapsLock))
-        {
-            target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
-            bus.rotation = Quaternion.Euler(0, mouseX, 0);
-        }
-        else {
-            target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+        mouseY = Mathf.Clamp(mouseY, -20, 60);
 
-        }
-        */
+        Camera.LookAt(target);
+
+        target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+  
     }
 }
