@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.unityassembler.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "F:\\Daten\\Hochschule\\5.Semester\\Softwareprojekt\\Git\\Unity-Assembler\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "Unity-Assembler [Testing]"
+        }
+      }
+    }
+  ]
+}
