@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 29c08bfb5afaec64ba6818fb7b11d710
+  - enabled: 1
+    path: Assets/Scenes/MainMenuVR.unity
+    guid: 6f05cd00287278147b9e6107d20ec06e
   m_configObjects: {}
