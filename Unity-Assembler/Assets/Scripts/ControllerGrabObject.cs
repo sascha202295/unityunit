@@ -5,13 +5,12 @@ using Valve.VR;
 
 public class ControllerGrabObject : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public SteamVR_Input_Sources handType;
-    public SteamVR_Behaviour_Pose controllerPose;
-    public SteamVR_Action_Boolean grabAction;
+    public SteamVR_Input_Sources mHandType;
+    public SteamVR_Behaviour_Pose mControllerPose;
+    public SteamVR_Action_Boolean mGrabAction;
 
     private GameObject collidingObject;
-    private GameObject objectInHand;
+    public GameObject objectInHand { get; private set; }
 
     private void SetCollidingObject(Collider col)
     {
@@ -64,8 +63,8 @@ public class ControllerGrabObject : MonoBehaviour
         {
             GetComponent<FixedJoint>().connectedBody = null;
             Destroy(GetComponent<FixedJoint>());
-            objectInHand.GetComponent<Rigidbody>().velocity = controllerPose.GetVelocity();
-            objectInHand.GetComponent<Rigidbody>().angularVelocity = controllerPose.GetAngularVelocity();
+            objectInHand.GetComponent<Rigidbody>().velocity = mControllerPose.GetVelocity();
+            objectInHand.GetComponent<Rigidbody>().angularVelocity = mControllerPose.GetAngularVelocity();
         }
         objectInHand = null;
     }
@@ -75,7 +74,7 @@ public class ControllerGrabObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (grabAction.GetLastStateDown(handType))
+        if (mGrabAction.GetLastStateDown(mHandType))
         {
             if (collidingObject)
             {
@@ -83,7 +82,7 @@ public class ControllerGrabObject : MonoBehaviour
             }
         }
 
-        if (grabAction.GetLastStateUp(handType))
+        if (mGrabAction.GetLastStateUp(mHandType))
         {
             if (objectInHand)
             {
