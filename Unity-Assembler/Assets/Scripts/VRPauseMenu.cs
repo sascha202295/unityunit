@@ -14,6 +14,7 @@ public class VRPauseMenu : MonoBehaviour
 
     private GameObject mPauseMenu;
     private bool mIsPaused = false;
+    private bool mUiPointeractive;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +40,17 @@ public class VRPauseMenu : MonoBehaviour
 
     public void Pause()
     {
-        mUIPointer.SetActive(true);
+        // save if UIPointer was active before menu activation
+        if (!mUIPointer.activeSelf)
+        {
+            mUIPointer.SetActive(true);
+            mUiPointeractive = false;
+        }
+        else
+        {
+            mUiPointeractive = true;
+        }
+        // place menu infront of camera
         transform.position = mVRCamera.transform.position + (mVRCamera.transform.forward * mMenuDistance);
         transform.LookAt(mVRCamera.transform);
         mPauseMenu.SetActive(true);
@@ -49,7 +60,11 @@ public class VRPauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        mUIPointer.SetActive(false);
+        // only deactivate UIPointer if it was not active before opening the menu
+        if (!mUiPointeractive)
+        {
+            mUIPointer.SetActive(false);
+        }
         mPauseMenu.SetActive(false);
         Time.timeScale = 1f;
         mIsPaused = false;

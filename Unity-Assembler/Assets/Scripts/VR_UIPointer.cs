@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Valve.VR;
 
 public class VR_UIPointer : MonoBehaviour
 {
@@ -9,8 +10,13 @@ public class VR_UIPointer : MonoBehaviour
     public GameObject mDot;
     public VRInputModule mInputmodule;
 
+    public bool enablePartpicker = false;
+    public SteamVR_Input_Sources mTargetSource;
+    public SteamVR_Action_Boolean mClickAction;
+
     private LineRenderer mLinerenderer = null;
-    
+    private List<GameObject> mSelectedParts = null;
+
     void Awake()
     {
         mLinerenderer = GetComponent<LineRenderer>();
@@ -32,6 +38,19 @@ public class VR_UIPointer : MonoBehaviour
 
         mLinerenderer.SetPosition(0, transform.position);
         mLinerenderer.SetPosition(1, endPosition);
+
+
+
+        if (enablePartpicker)
+        {
+            if (mClickAction.GetStateDown(mTargetSource))
+            {
+                if (hit.collider != null && hit.collider.gameObject.transform.root.GetComponent<ProductAssemblyController>() != null)
+                {
+                    ProcessPartPicker(hit.collider.gameObject);
+                }
+            }
+        }
     }
 
     private RaycastHit CreateRaycast(float length)
@@ -41,5 +60,44 @@ public class VR_UIPointer : MonoBehaviour
         Physics.Raycast(ray, out hit, mDefaultLength);
 
         return hit;
+    }
+
+    private void ProcessPartPicker(GameObject part)
+    {
+        if (mSelectedParts == null)
+        {
+            mSelectedParts = new List<GameObject>();
+        }
+        if (mSelectedParts.Contains(part))
+        {
+            setObjectColor(part.transform, Color.white);
+            mSelectedParts.Remove(part);
+        }
+        else
+        {
+            setObjectColor(part.transform, Color.red);
+            mSelectedParts.Add(part);
+        }
+    }
+
+    private void setObjectColor(Transform mTransform, Color color)
+    {
+        if (mTransform.childCount > 0)
+        {
+            foreach (Transform child in mTransform)
+            {
+                if (child.gameObject.GetComponent<Renderer>().material != null)
+                {
+                    child.gameObject.GetComponent<Renderer>().material.color = color;
+                }
+            }
+        }
+        else
+        {
+            if (mTransform.gameObject.gameObject.GetComponent<Renderer>().material != null)
+            {
+                mTransform.gameObject.GetComponent<Renderer>().material.color = color;
+            }
+        }
     }
 }
