@@ -7,6 +7,7 @@ public class ProductAssemblyController : MonoBehaviour
 {
     public SteamVR_Input_Sources mHandType;
     public SteamVR_Action_Boolean mGrabAction;
+    public bool mAddProductAssemblyCollider = false;
 
     void Start()
     {
@@ -27,9 +28,12 @@ public class ProductAssemblyController : MonoBehaviour
             {
                 AddMeshColliderTriggerTo(child.gameObject, child.GetComponent<MeshFilter>().sharedMesh);
             }
-            ProductAssemblyCollider tmp = child.gameObject.AddComponent<ProductAssemblyCollider>();
-            tmp.mHandType = this.mHandType;
-            tmp.mGrabAction = this.mGrabAction;
+            if (mAddProductAssemblyCollider)
+            {
+                ProductAssemblyCollider tmp = child.gameObject.AddComponent<ProductAssemblyCollider>();
+                tmp.mHandType = this.mHandType;
+                tmp.mGrabAction = this.mGrabAction;
+            }
         }
     }
 

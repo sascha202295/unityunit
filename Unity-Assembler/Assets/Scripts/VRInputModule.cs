@@ -34,10 +34,14 @@ public class VRInputModule : BaseInputModule
         HandlePointerExitAndEnter(mData, mCurrentObject);
 
         if (mClickAction.GetStateDown(mTargetSource))
+        {
             ProcessPress(mData);
+        }
 
         if (mClickAction.GetStateUp(mTargetSource))
+        {
             ProcessRelease(mData);
+        }
     }
 
     public PointerEventData GetData()
@@ -83,4 +87,5 @@ public class VRInputModule : BaseInputModule
         data.pointerPress = null;
         data.rawPointerPress = null;
     }
+
 }
