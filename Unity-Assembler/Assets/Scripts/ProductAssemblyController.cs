@@ -5,9 +5,9 @@ using Valve.VR;
 
 public class ProductAssemblyController : MonoBehaviour
 {
+    public bool mAddProductAssemblyCollider = false;
     public SteamVR_Input_Sources mHandType;
     public SteamVR_Action_Boolean mGrabAction;
-    public bool mAddProductAssemblyCollider = false;
 
     void Start()
     {

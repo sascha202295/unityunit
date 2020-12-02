@@ -8,8 +8,10 @@ using Valve.VR;
 public class VRInputModule : BaseInputModule
 {
     public Camera mCamera;
+    public GameObject mUiPointer;
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Action_Boolean mClickAction;
+    public SteamVR_Action_Boolean mTogglePointerAction;
 
     private GameObject mCurrentObject = null;
     private PointerEventData mData;
@@ -41,6 +43,11 @@ public class VRInputModule : BaseInputModule
         if (mClickAction.GetStateUp(mTargetSource))
         {
             ProcessRelease(mData);
+        }
+
+        if (mTogglePointerAction.GetStateDown(mTargetSource))
+        {
+            ProcessTogglePointer();
         }
     }
 
@@ -86,6 +93,18 @@ public class VRInputModule : BaseInputModule
         data.pressPosition = Vector2.zero;
         data.pointerPress = null;
         data.rawPointerPress = null;
+    }
+
+    private void ProcessTogglePointer()
+    {
+        if (mUiPointer.activeSelf)
+        {
+            mUiPointer.SetActive(false);
+        }
+        else
+        {
+            mUiPointer.SetActive(true);
+        }
     }
 
 }

@@ -15,7 +15,7 @@ public class VR_UIPointer : MonoBehaviour
     public SteamVR_Action_Boolean mClickAction;
 
     private LineRenderer mLinerenderer = null;
-    private List<GameObject> mSelectedParts = null;
+    public List<GameObject> mSelectedParts {get; private set;}
 
     void Awake()
     {
