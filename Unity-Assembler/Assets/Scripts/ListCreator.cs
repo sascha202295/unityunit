@@ -14,7 +14,7 @@ public class ListCreator : MonoBehaviour
     private RectTransform content = null;
 
     [SerializeField]
-    private int numberOfItems = 3;
+    private int numberOfItems = 0;
 
     private bool listChanged = false;
     private float elapsedTime = 0;
@@ -41,7 +41,7 @@ public class ListCreator : MonoBehaviour
 
         if (elapsedTime > 2.0f && numberOfItems < 20)
         {
-            addNewItemToList("Item" + numberOfItems, itemImages[1], new GameObject("Test"+ numberOfItems));
+            addNewItemToList("Item" + numberOfItems, itemImages[0], new GameObject("Test"+ numberOfItems));
             elapsedTime = 0;
         }
     }
@@ -90,7 +90,8 @@ public class ListCreator : MonoBehaviour
         //newSpawn Position
         Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
         //instantiate item
-        GameObject SpawnedItem = Instantiate(item, pos, SpawnPoint.rotation);
+        item.transform.position = pos;
+        GameObject SpawnedItem = Instantiate(item);
         //setParent
         SpawnedItem.transform.SetParent(SpawnPoint, false);
         //get ItemDetails Component
