@@ -8,12 +8,11 @@ using UnityEngine.EventSystems;
 public class GameobjectsList : MonoBehaviour
 {
     private bool isListCreated=false;
-    private GameObject gridList;
+    private GameObject klmodell ;
     private Button exit_button;
-    private Transform item, ContentView;
+    private Transform  ContentView, gridList, bicycle;
     public Camera world_camera;
     private GameObject itemPrefab;
-    private GameObject bicycle; 
     // Start is called before the first frame update
     void Start()
     {   
@@ -40,16 +39,17 @@ public class GameobjectsList : MonoBehaviour
         if (!isListCreated) {
             isListCreated = true;
             //refrence ListItem from Resources folder
-            gridList = Instantiate((GameObject)Resources.Load("GridList"), new Vector3(this.transform.position.x, this.transform.position.y,8), Quaternion.identity);
+            klmodell = Instantiate((GameObject)Resources.Load("KLModell"), new Vector3(this.transform.position.x, this.transform.position.y,8), Quaternion.identity);
+            gridList = klmodell.transform.Find("GridList");
             //edit canvas setting of girdlist ui
             gridList.GetComponent<Canvas>().worldCamera = world_camera;
-            gridList.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+            gridList.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
             gridList.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             gridList.GetComponent<CanvasScaler>().screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             gridList.GetComponent<CanvasScaler>().referencePixelsPerUnit = 100;
 
             //refrence bicycle from Resources folder
-            bicycle = Instantiate((GameObject)Resources.Load("Cyclev2"), new Vector3(this.transform.position.x-1f, this.transform.position.y, 1.3f), Quaternion.identity);
+            bicycle = klmodell.transform.Find("Modell").Find("Cyclev2");
 
             //When an Exit button is Clicked
             exit_button = gridList.transform.Find("Header").Find("X_button").GetComponent<Button>();
@@ -67,13 +67,13 @@ public class GameobjectsList : MonoBehaviour
                     foreach (Transform child in childs)
                     {
 
-                        Transform part = FindChild(bicycle.transform, child.name);
+                        Transform part = FindChild(bicycle, child.name);
                         GenerateItem(ContentView, FindChild(bicycle.transform, child.name));
 
                     }
                 else
                 {
-                    Transform part = FindChild(bicycle.transform, childs.name);
+                    Transform part = FindChild(bicycle, childs.name);
                     GenerateItem(ContentView, part);
 
 
@@ -91,8 +91,9 @@ public class GameobjectsList : MonoBehaviour
     {
         isListCreated = false;
         Debug.Log("clicked....");
-        Destroy(gridList);
-        Destroy(bicycle);
+       // Destroy(gridList);
+       // Destroy(bicycle);
+        Destroy(klmodell);
     }
 
     void GenerateItem(Transform contentView, Transform bicyclePart) {
