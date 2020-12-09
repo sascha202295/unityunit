@@ -50,5 +50,12 @@ public class ItemHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("clickedd!!!");
+        // translates bicycle
+        bicyclePart.transform.Translate(0f, 1.0f,0f);
+        // Detaches the transform from its parent.
+        transform.parent = null;
+
+        //.... trying to give the bicycle part to the vr hands 
+
     }
 }
