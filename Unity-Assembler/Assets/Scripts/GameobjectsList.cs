@@ -26,10 +26,7 @@ public class GameobjectsList : MonoBehaviour
         //Instantiate(gridList, transform.position, Quaternion.identity);
         // myButton.onClick.AddListener ((UnityEngine.Events.UnityAction) this.DestroyGridList);
     }
-    public void OnClick()
-    {
-        Debug.Log("Clicked!");
-    }
+
 
     // Update is called once per frame
     void Update()
@@ -68,11 +65,19 @@ public class GameobjectsList : MonoBehaviour
             {
                 if (childs.childCount > 0)
                     foreach (Transform child in childs)
-                        GenerateItem(ContentView, bicycle.GetComponent<Transform>().Find(childs.name).Find(child.name));
-                       // GenerateItem(ContentView, child.GetComponent<MeshFilter>().mesh);
+                    {
+
+                        Transform part = FindChild(bicycle.transform, child.name);
+                        GenerateItem(ContentView, FindChild(bicycle.transform, child.name));
+
+                    }
                 else
-                    GenerateItem(ContentView, bicycle.GetComponent<Transform>().Find(childs.name));
-                   // GenerateItem(ContentView, childs.GetComponent<MeshFilter>().mesh);
+                {
+                    Transform part = FindChild(bicycle.transform, childs.name);
+                    GenerateItem(ContentView, part);
+
+
+                }
             }
             
 
@@ -111,16 +116,23 @@ public class GameobjectsList : MonoBehaviour
 
     }
 
-    private Transform RecursiveFindChild(Transform parent, string childName)
-    {
+    private Transform FindChild(Transform parent, string childName)
+    {   
         foreach (Transform childs in parent)
         {
-
-           if (childs.childCount > 0)
-                return childs.GetComponent<Transform>().Find(childName);
-            else
+            //Debug.Log("name: "+childs.name);
+            if (childs.childCount > 0)
                 foreach (Transform child in childs)
-                    return child.GetComponent<Transform>().Find(childName);
+                {
+                    if (child.name== childName)
+                        return child;
+                }
+            else
+            {
+                if (childs.name == childName)
+                    return childs;
+            }
+
 
         }
 
