@@ -55,7 +55,7 @@ public class ItemHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         // Detaches the transform from its parent.
         transform.parent = null;
 
-        //.... trying to give the bicycle part to the vr hands 
+        //.... trying to give the bicycle part to the vr hands ...
 
     }
 }
