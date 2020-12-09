@@ -7,7 +7,7 @@ using System;
 
 public class ItemHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public GameObject bicycle;
+    public Transform bicycle;
     //public string name;
     public Transform bicyclePart;
 
