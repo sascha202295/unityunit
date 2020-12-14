@@ -5,12 +5,8 @@ using UnityEngine.UI;
 
 public class ItemDetails : MonoBehaviour
 {
-    public GameObject gameObject;
-    //Item Name
     public Text text = null;
-    //Item Image
-    public Image image = null;
-    // Start is called before the first frame update
+
     void Start()
     {
         

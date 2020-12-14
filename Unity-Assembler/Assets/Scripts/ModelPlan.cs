@@ -6,16 +6,29 @@ public class ModelPlan : MonoBehaviour
 {
 
     public List<GameObject> modelGameObjects;
+    public Material material;
 
     private Vector3 modelStandPosition;
     private GameObject modelObject;
     // Start is called before the first frame update
     void Start()
     {
+        createModel();
+    }
+
+    void Update()
+    {
+        
+    }
+
+
+    void createModel()
+    {
+        gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         modelStandPosition = gameObject.transform.position;
-        modelStandPosition.y += 1;
         modelObject = new GameObject("ModelPlan");
         modelObject.AddComponent<ProductAssemblyController>();
+        modelObject.transform.rotation = gameObject.transform.rotation;
         modelObject.transform.parent = gameObject.transform;
         modelObject.transform.position = modelStandPosition;
         Instantiate(modelObject);
@@ -24,15 +37,22 @@ public class ModelPlan : MonoBehaviour
             GameObject tmpGameObject = Instantiate(gameObject);
             tmpGameObject.transform.position = modelStandPosition;
             tmpGameObject.transform.parent = modelObject.transform;
-            // tmpGameObject.AddComponent<MeshRenderer>();
+            MeshRenderer tmpMeshRenderer = tmpGameObject.GetComponent<MeshRenderer>();
+        if (tmpMeshRenderer == null)
+            {
+                for(int i = 0; i < tmpGameObject.transform.childCount; i++)
+                {
+                    tmpGameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material = material;
+                }
+                
+            } 
+        else
+            {
+                tmpMeshRenderer.material = material;
+            }
         });
 
-        modelObject.transform.rotation = gameObject.transform.rotation;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        modelObject.transform.localPosition = new Vector3(0, 0.4f, -0.2f);
+        modelObject.transform.localScale = new Vector3(4.0f / 3.0f, 4, 0.4f);
     }
 }

@@ -16,6 +16,7 @@ public class VR_UIPointer : MonoBehaviour
 
     private LineRenderer mLinerenderer = null;
     public List<GameObject> mSelectedParts {get; private set;}
+    public ListCreator listCreator;
 
     void Awake()
     {
@@ -71,6 +72,7 @@ public class VR_UIPointer : MonoBehaviour
         if (mSelectedParts.Contains(part))
         {
             setObjectColor(part.transform, Color.white);
+
             mSelectedParts.Remove(part);
         }
         else

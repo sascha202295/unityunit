@@ -16,91 +16,138 @@ public class ListCreator : MonoBehaviour
     [SerializeField]
     private int numberOfItems = 0;
 
-    private bool listChanged = false;
     private float elapsedTime = 0;
+    private bool addItem = true;
 
-    public List<string> itemNames = null;
-    public List<Sprite> itemImages = null;
     public List<GameObject> itemGameObjects = null;
+
+    private GameObject g1;
+    private GameObject g2;
+    private GameObject g3;
+    private GameObject g4;
+    private GameObject g5;
 
     // Start is called before the first frame update
     void Start()
     {
-        createScrollView();
+        g1 = new GameObject("Test1");
+        g2 = new GameObject("Test2");
+        g3 = new GameObject("Test3");
+        g4 = new GameObject("Test4");
+        g5 = new GameObject("Test5");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(listChanged)
-        {
-            addToScrollView();
-        }
-        elapsedTime += Time.deltaTime;
-        Debug.Log(elapsedTime);
 
-        if (elapsedTime > 2.0f && numberOfItems < 20)
+        elapsedTime += Time.deltaTime;
+
+        if (elapsedTime > 3.0f && elapsedTime < 3.4f)
         {
-            addNewItemToList("Item" + numberOfItems, itemImages[0], new GameObject("Test"+ numberOfItems));
+            addNewItemToList(g1);
+            addNewItemToList(g2);
+            addNewItemToList(g3);
+            addNewItemToList(g4);
+            addNewItemToList(g5);
+            elapsedTime = 3.5f;
+        }
+
+        if (elapsedTime > 6.0f && elapsedTime < 6.4f)
+        {
+            removeItemFromList(g1);
+            removeItemFromList(g3);
+            removeItemFromList(g5);
+            elapsedTime = 6.5f;
+        }
+
+        if (elapsedTime > 9.0f)
+        {
+            removeItemFromList(g2);
+            removeItemFromList(g4);
             elapsedTime = 0;
         }
+
     }
 
-    void addNewItemToList(string name, Sprite sprite, GameObject modelGameObject) 
+    void addNewItemToList(GameObject modelGameObject)
     {
-        itemNames.Add(modelGameObject.name);
-        itemImages.Add(sprite);
         itemGameObjects.Add(modelGameObject);
-        numberOfItems++;
-        listChanged = true;
+        addItem = true;
+        updateScrollView();
     }
 
-    void createScrollView()
+    void removeItemFromList(GameObject modelGameObject)
     {
-        //setContent Holder Height;
-        content.sizeDelta = new Vector2(0, numberOfItems * 60);
+        itemGameObjects.Remove(modelGameObject);
+        updateScrollView();
+    }
 
-        for (int i = 0; i < numberOfItems; i++)
+    void updateScrollView()
+    {
+        //content.sizeDelta = new Vector2(0, numberOfItems * 60);
+        if (addItem)
         {
-            // 60 width of item
+            AddItemToView(itemGameObjects[itemGameObjects.Count - 1]);
+            addItem = false;
+        }
+        else
+        {
+            reCreateScrollview();
+        }
+    }
+
+    void reCreateScrollview()
+    {
+        for (int i = 0; i < SpawnPoint.transform.childCount; i++)
+        {
+            Destroy(SpawnPoint.transform.GetChild(i).gameObject);
+        }
+
+        int ii = 0;
+        itemGameObjects.ForEach(delegate (GameObject gameObject)
+        {
+            if (itemGameObjects.Contains(gameObject))
+            {
+                float spawnY = (ii < 0 ? 0 : ii) * 60;
+                ii++;
+                Debug.Log("recreate " + gameObject + " i: " + ii + "y: " + spawnY);
+                //newSpawn Position
+                Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
+                //instantiate item
+                item.transform.position = pos;
+                GameObject SpawnedItem = Instantiate(item);
+                //setParent
+                SpawnedItem.transform.SetParent(SpawnPoint, false);
+                //get ItemDetails Component
+                ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
+                //set name
+                itemDetails.text.text = gameObject.name;
+            }
+        });
+    }
+
+    void AddItemToView(GameObject tmpObject)
+    {
+        // 60 width of item
+        if (itemGameObjects.Contains(tmpObject))
+        {
+            int i = itemGameObjects.FindIndex(a => a.Equals(tmpObject));
+            
             float spawnY = i * 60;
+            spawnY = (spawnY < 0 ? 0 : spawnY);
+            Debug.Log(tmpObject + " i: " + i + "y: " + spawnY);
             //newSpawn Position
             Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
             //instantiate item
-            GameObject SpawnedItem = Instantiate(item, pos, SpawnPoint.rotation);
+            item.transform.position = pos;
+            GameObject SpawnedItem = Instantiate(item);
             //setParent
             SpawnedItem.transform.SetParent(SpawnPoint, false);
             //get ItemDetails Component
             ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
             //set name
-            itemDetails.text.text = itemNames[i];
-            //set image
-            itemDetails.image.sprite = itemImages[i];
+            itemDetails.text.text = tmpObject.name;
         }
-    }
-
-    void addToScrollView()
-    {
-        content.sizeDelta = new Vector2(0, numberOfItems * 60);
-
-        int i =  numberOfItems - 1;
-        
-        // 60 width of item
-        float spawnY = i * 60;
-        //newSpawn Position
-        Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
-        //instantiate item
-        item.transform.position = pos;
-        GameObject SpawnedItem = Instantiate(item);
-        //setParent
-        SpawnedItem.transform.SetParent(SpawnPoint, false);
-        //get ItemDetails Component
-        ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
-        //set name
-        itemDetails.text.text = itemNames[i];
-        //set image
-        itemDetails.image.sprite = itemImages[i];
-        listChanged = false;
-        Debug.Log("Add");
     }
 }
