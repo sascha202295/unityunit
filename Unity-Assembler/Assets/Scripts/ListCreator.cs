@@ -43,7 +43,7 @@ public class ListCreator : MonoBehaviour
 
         elapsedTime += Time.deltaTime;
 
-        if (elapsedTime > 3.0f && elapsedTime < 3.4f)
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             addNewItemToList(g1);
             addNewItemToList(g2);
@@ -53,7 +53,7 @@ public class ListCreator : MonoBehaviour
             elapsedTime = 3.5f;
         }
 
-        if (elapsedTime > 6.0f && elapsedTime < 6.4f)
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             removeItemFromList(g1);
             removeItemFromList(g3);
@@ -61,7 +61,7 @@ public class ListCreator : MonoBehaviour
             elapsedTime = 6.5f;
         }
 
-        if (elapsedTime > 9.0f)
+        if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             removeItemFromList(g2);
             removeItemFromList(g4);
@@ -88,8 +88,9 @@ public class ListCreator : MonoBehaviour
         //content.sizeDelta = new Vector2(0, numberOfItems * 60);
         if (addItem)
         {
-            AddItemToView(itemGameObjects[itemGameObjects.Count - 1]);
-            addItem = false;
+            //AddItemToView(itemGameObjects[itemGameObjects.Count - 1]);
+            //addItem = false;
+            reCreateScrollview();
         }
         else
         {
@@ -104,39 +105,32 @@ public class ListCreator : MonoBehaviour
             Destroy(SpawnPoint.transform.GetChild(i).gameObject);
         }
 
-        int ii = 0;
-        itemGameObjects.ForEach(delegate (GameObject gameObject)
+        for (int ii = 0; ii < itemGameObjects.Count; ii++)
         {
-            if (itemGameObjects.Contains(gameObject))
-            {
-                float spawnY = (ii < 0 ? 0 : ii) * 60;
-                ii++;
-                Debug.Log("recreate " + gameObject + " i: " + ii + "y: " + spawnY);
-                //newSpawn Position
-                Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
-                //instantiate item
-                item.transform.position = pos;
-                GameObject SpawnedItem = Instantiate(item);
-                //setParent
-                SpawnedItem.transform.SetParent(SpawnPoint, false);
-                //get ItemDetails Component
-                ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
-                //set name
-                itemDetails.text.text = gameObject.name;
-            }
-        });
+            float spawnY = ii * 40;
+            //newSpawn Position
+            Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
+            Debug.Log(itemGameObjects[ii] + ": " + spawnY + ": " + pos);
+            //instantiate item
+            item.transform.position = pos;
+            GameObject SpawnedItem = Instantiate(item);
+            //setParent
+            SpawnedItem.transform.SetParent(SpawnPoint.transform, false);
+            //get ItemDetails Component
+            ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
+            //set name
+            itemDetails.text.text = itemGameObjects[ii].name;
+        }
     }
 
     void AddItemToView(GameObject tmpObject)
     {
-        // 60 width of item
+        // 40 width of item
         if (itemGameObjects.Contains(tmpObject))
         {
             int i = itemGameObjects.FindIndex(a => a.Equals(tmpObject));
-            
-            float spawnY = i * 60;
-            spawnY = (spawnY < 0 ? 0 : spawnY);
-            Debug.Log(tmpObject + " i: " + i + "y: " + spawnY);
+
+            float spawnY = i * 40;
             //newSpawn Position
             Vector3 pos = new Vector3(SpawnPoint.position.x, -spawnY, SpawnPoint.position.z);
             //instantiate item
