@@ -16,11 +16,15 @@ public class VR_UIPointer : MonoBehaviour
 
     private LineRenderer mLinerenderer = null;
     public List<GameObject> mSelectedParts {get; private set;}
-    public ListCreator listCreator;
+    public GameObject scrollView;
+    private Station station;
+    private bool createStation = false;
+    private ListCreator listCreator;
 
     void Awake()
     {
         mLinerenderer = GetComponent<LineRenderer>();
+        listCreator = scrollView.GetComponent<ListCreator>();
     }
     
     void Update()
@@ -41,7 +45,6 @@ public class VR_UIPointer : MonoBehaviour
         mLinerenderer.SetPosition(1, endPosition);
 
 
-
         if (enablePartpicker)
         {
             if (mClickAction.GetStateDown(mTargetSource))
@@ -50,6 +53,18 @@ public class VR_UIPointer : MonoBehaviour
                 {
                     ProcessPartPicker(hit.collider.gameObject);
                 }
+            }
+        }
+
+        if(createStation)
+        {
+            // TODO get position vector similar to teleport
+            if (mClickAction.GetStateDown(mTargetSource))
+            {
+                station = new Station();
+                Vector3 position = new Vector3(10, 0, 10);
+                station.createStation(position, mSelectedParts);
+                createStation = false;
             }
         }
     }
@@ -74,11 +89,13 @@ public class VR_UIPointer : MonoBehaviour
             setObjectColor(part.transform, Color.white);
 
             mSelectedParts.Remove(part);
+            listCreator.removeItemFromList(part);
         }
         else
         {
             setObjectColor(part.transform, Color.red);
             mSelectedParts.Add(part);
+            listCreator.addNewItemToList(part);
         }
     }
 

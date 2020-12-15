@@ -70,14 +70,14 @@ public class ListCreator : MonoBehaviour
 
     }
 
-    void addNewItemToList(GameObject modelGameObject)
+    public void addNewItemToList(GameObject modelGameObject)
     {
         itemGameObjects.Add(modelGameObject);
         addItem = true;
         updateScrollView();
     }
 
-    void removeItemFromList(GameObject modelGameObject)
+    public void removeItemFromList(GameObject modelGameObject)
     {
         itemGameObjects.Remove(modelGameObject);
         updateScrollView();
