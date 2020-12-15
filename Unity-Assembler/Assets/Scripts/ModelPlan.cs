@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
 
 public class ModelPlan : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class ModelPlan : MonoBehaviour
 
         modelObject = new GameObject("ModelPlan");
         modelObject.AddComponent<ProductAssemblyController>();
+        ProductAssemblyController pac = modelObject.GetComponent<ProductAssemblyController>();
+        pac.mAddProductAssemblyCollider = true;
+        pac.mGrabAction = SteamVR_Actions.actions_GrabPinch;
         modelObject.transform.rotation = gameObject.transform.rotation;
         modelObject.transform.parent = gameObject.transform;
         modelObject.transform.position = modelStandPosition;    
@@ -43,14 +47,8 @@ public class ModelPlan : MonoBehaviour
             {
                 for (int i = 0; i < tmpGameObject.transform.childCount; i++)
                 {
-                    tmpGameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material = material;
-                    for(int ii = 0; i < tmpGameObject.transform.GetChild(i).gameObject.GetComponents<MeshCollider>().Length - 2; ii++)
-                    {
-                        Destroy(tmpGameObject.transform.GetChild(i).gameObject.GetComponent<MeshCollider>());
-                    }
-                    
+                    tmpGameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material = material;                    
                 }
-
             }
             else
             {

@@ -14,19 +14,25 @@ public class ProductAssemblyController : MonoBehaviour
         // add MeshColliders to every child component, if child has subparts, add collider to parent
         foreach (Transform child in transform)
         {
-            if(child.childCount > 0)
+            Debug.Log(child.GetComponents<MeshCollider>().Length);
+            if (child.childCount > 0)
             {
-                foreach (Transform grandchild in child)
+                if (child.GetComponents<MeshCollider>().Length != child.childCount)
                 {
-                    if (grandchild.GetComponent<MeshFilter>() != null)
+                    foreach (Transform grandchild in child)
                     {
-                        AddMeshColliderTriggerTo(child.gameObject, grandchild.GetComponent<MeshFilter>().sharedMesh);
+                        if (grandchild.GetComponent<MeshFilter>() != null)
+                        {
+                            AddMeshColliderTriggerTo(child.gameObject, grandchild.GetComponent<MeshFilter>().sharedMesh);
+                        }
                     }
                 }
             }
-            else if(child.GetComponent<MeshFilter>() != null)
+            else if (child.GetComponent<MeshFilter>() != null)
             {
-                AddMeshColliderTriggerTo(child.gameObject, child.GetComponent<MeshFilter>().sharedMesh);
+                
+                if (child.GetComponents<MeshCollider>().Length != child.childCount)
+                    AddMeshColliderTriggerTo(child.gameObject, child.GetComponent<MeshFilter>().sharedMesh);
             }
             if (mAddProductAssemblyCollider)
             {
