@@ -25,7 +25,7 @@ public class Station : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Backslash))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             createStation(new Vector3(5 * numberOfStations, 0, 0), TestList);
         }
@@ -33,22 +33,28 @@ public class Station : MonoBehaviour
 
     public void createStation(Vector3 position, List<GameObject> gameObjects)
     {
+        Debug.LogWarning(position + "" + gameObjects);
+        foreach (GameObject mobject in gameObjects)
+        {
+            Debug.LogWarning(mobject.name);
+        }
+
         if (maxNumberOfStations > numberOfStations)
         {
             modelObjects = gameObjects;
             station = new GameObject("Station" + numberOfStations);
             station.transform.position = position;
-            stationModelPodest = Instantiate(modelPodest);
+            stationModelPodest = Instantiate((GameObject) Resources.Load("ModelPrep"));
             stationModelPodest.name = station.name + " - Model";
             stationModelPodest.transform.parent = station.transform;
             stationModelPodest.transform.localPosition = position + new Vector3(0, 0.2f, 0);
             stationModelPodest.AddComponent<ModelPlan>();
             ModelPlan mp = stationModelPodest.GetComponent<ModelPlan>();
-            mp.setMaterial(material);
+            mp.setMaterial((Material)Resources.Load("CycleTransparent"));
             mp.createModel(gameObjects);
             modelMontagePlan = new List<GameObject>();
 
-            stations.Add(station);
+            //stations.Add(station);
             numberOfStations++;
         } else
         {

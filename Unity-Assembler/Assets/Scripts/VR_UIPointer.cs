@@ -14,17 +14,16 @@ public class VR_UIPointer : MonoBehaviour
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Action_Boolean mClickAction;
 
+
     private LineRenderer mLinerenderer = null;
     public List<GameObject> mSelectedParts {get; private set;}
-    public GameObject scrollView;
-    private Station station;
-    private bool createStation = false;
-    private ListCreator listCreator;
+    public GameObject mPartpickerScreen;
+    private PartpickerScreen partpicker;
 
     void Awake()
     {
         mLinerenderer = GetComponent<LineRenderer>();
-        listCreator = scrollView.GetComponent<ListCreator>();
+        partpicker = mPartpickerScreen.GetComponent<PartpickerScreen>();
     }
     
     void Update()
@@ -56,17 +55,19 @@ public class VR_UIPointer : MonoBehaviour
             }
         }
 
+        /*
         if(createStation)
         {
             // TODO get position vector similar to teleport
             if (mClickAction.GetStateDown(mTargetSource))
             {
                 station = new Station();
-                Vector3 position = new Vector3(10, 0, 10);
+                Vector3 position = hit.collider.transform.position;
                 station.createStation(position, mSelectedParts);
                 createStation = false;
             }
         }
+        */
     }
 
     private RaycastHit CreateRaycast(float length)
@@ -86,16 +87,18 @@ public class VR_UIPointer : MonoBehaviour
         }
         if (mSelectedParts.Contains(part))
         {
+            // remove item from selection
             setObjectColor(part.transform, Color.white);
 
             mSelectedParts.Remove(part);
-            listCreator.removeItemFromList(part);
+            partpicker.removeItemFromList(part);
         }
         else
         {
+            // add item to selection
             setObjectColor(part.transform, Color.red);
             mSelectedParts.Add(part);
-            listCreator.addNewItemToList(part);
+            partpicker.addNewItemToList(part);
         }
     }
 
