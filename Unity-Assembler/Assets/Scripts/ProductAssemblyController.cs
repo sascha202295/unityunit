@@ -30,8 +30,7 @@ public class ProductAssemblyController : MonoBehaviour
             }
             else if (child.GetComponent<MeshFilter>() != null)
             {
-                
-                if (child.GetComponents<MeshCollider>().Length != child.childCount)
+                if (child.GetComponents<MeshCollider>().Length != 1)
                     AddMeshColliderTriggerTo(child.gameObject, child.GetComponent<MeshFilter>().sharedMesh);
             }
             if (mAddProductAssemblyCollider)

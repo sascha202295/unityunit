@@ -27,7 +27,7 @@ public class Station : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            createStation(new Vector3(5 * numberOfStations, 0, 0), TestList);
+            createStation(new Vector3(5 * (numberOfStations + 1) + 10, 0, 0), TestList);
         }
     }
 
@@ -47,18 +47,40 @@ public class Station : MonoBehaviour
             stationModelPodest = Instantiate((GameObject) Resources.Load("ModelPrep"));
             stationModelPodest.name = station.name + " - Model";
             stationModelPodest.transform.parent = station.transform;
-            stationModelPodest.transform.localPosition = position + new Vector3(0, 0.2f, 0);
+            stationModelPodest.transform.position = position + new Vector3(0, 0.2f, 0);
             stationModelPodest.AddComponent<ModelPlan>();
             ModelPlan mp = stationModelPodest.GetComponent<ModelPlan>();
             mp.setMaterial((Material)Resources.Load("CycleTransparent"));
             mp.createModel(gameObjects);
             modelMontagePlan = new List<GameObject>();
-
-            //stations.Add(station);
+            PartsOnTable(position, station);
+            stations.Add(station);
             numberOfStations++;
         } else
         {
             // TODO: maybe show dialog max number of stations
+        }
+    }
+
+    private void PartsOnTable(Vector3 position, GameObject station)
+    {
+        GameObject table_small = (GameObject) Resources.Load("Pref_Station_Small");
+        for (int i =0; i < modelObjects.Count; i++)
+        {
+            GameObject tmpTable = Instantiate(table_small);
+            tmpTable.AddComponent<Rigidbody>();
+            tmpTable.GetComponent<Rigidbody>().isKinematic = true;
+            tmpTable.AddComponent<BoxCollider>();
+            tmpTable.transform.position = position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(0.5f, 0.8f, 3f);
+            tmpTable.transform.parent = station.transform;
+            
+            GameObject tmpGameObject = Instantiate(modelObjects[i], position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(0.5f, 1f, 2.5f), Quaternion.Euler(0, 0, 90));
+            tmpGameObject.transform.parent = station.transform;
+            tmpGameObject.AddComponent<Rigidbody>();
+            tmpGameObject.GetComponent<Rigidbody>().useGravity = true;
+            tmpGameObject.GetComponent<Rigidbody>().isKinematic = true;
+            tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
+            tmpGameObject.AddComponent<BoxCollider>();
         }
     }
 
