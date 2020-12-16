@@ -75,7 +75,7 @@ public class Station : MonoBehaviour
             tmpGameObject.GetComponent<Rigidbody>().useGravity = true;
             tmpGameObject.GetComponent<Rigidbody>().isKinematic = true;
             tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
-            tmpGameObject.AddComponent<BoxCollider>();
+            //tmpGameObject.AddComponent<BoxCollider>();
         }
     }
 

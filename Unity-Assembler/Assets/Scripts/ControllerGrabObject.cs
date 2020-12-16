@@ -46,6 +46,7 @@ public class ControllerGrabObject : MonoBehaviour
         objectInHand = collidingObject;
         collidingObject = null;
         var joint = AddFixedJoint();
+        objectInHand.GetComponent<Rigidbody>().isKinematic = false;
         joint.connectedBody = objectInHand.GetComponent<Rigidbody>();
     }
 

@@ -63,16 +63,13 @@ public class LaserStationPlacer : MonoBehaviour
     public void EnableStationPlacer(List<GameObject> selectedParts)
     {
         enableStationPlacement = true;
-        parts = selectedParts;
-
-        /*new List<GameObject>();
-    foreach (GameObject part in selectedParts)
-    {
-        GameObject tmp = Instantiate(part);
-        tmp.transform.position = tmp.transform.position + new Vector3
-        parts.Add(Instantiate(part));
-        pa
-    }*/
+        parts = new List<GameObject>();
+        foreach (GameObject part in selectedParts)
+        {
+            GameObject tmp = Instantiate(part);
+            tmp.transform.position = tmp.transform.position + new Vector3(0f, -50f, 0f);
+            parts.Add(tmp);
+        }
     }
 
     private void ShowLaser(RaycastHit hit)
