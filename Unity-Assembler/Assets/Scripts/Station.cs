@@ -42,7 +42,7 @@ public class Station : MonoBehaviour
             stationModelPodest = Instantiate((GameObject) Resources.Load("ModelPrep"));
             stationModelPodest.name = station.name + " - Model";
             stationModelPodest.transform.parent = station.transform;
-            stationModelPodest.transform.localPosition = new Vector3(0, 0.2f, 0);
+            stationModelPodest.transform.localPosition = new Vector3(0, 0.07f, 1);
             stationModelPodest.AddComponent<ModelPlan>();
             ModelPlan mp = stationModelPodest.GetComponent<ModelPlan>();
             mp.setMaterial((Material)Resources.Load("CycleTransparent"));
@@ -68,14 +68,22 @@ public class Station : MonoBehaviour
             tmpTable.AddComponent<BoxCollider>();
             tmpTable.transform.position = position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(0.5f, 0.8f, 3f);
             tmpTable.transform.parent = station.transform;
-            
+
             GameObject tmpGameObject = Instantiate(modelObjects[i], position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(0.5f, 1f, 2.5f), Quaternion.Euler(0, 0, 90));
             tmpGameObject.transform.parent = station.transform;
             tmpGameObject.AddComponent<Rigidbody>();
             tmpGameObject.GetComponent<Rigidbody>().useGravity = true;
             tmpGameObject.GetComponent<Rigidbody>().isKinematic = true;
             tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
-            //tmpGameObject.AddComponent<BoxCollider>();
+
+
+            //GameObject tmpGameObject = Instantiate(modelObjects[i], position + (i+1) * new Vector3(0.5f, 0, 0) + new Vector3(0.5f, 0, 2.5f), Quaternion.Euler(0, 90, 0));
+            //tmpGameObject.transform.parent = station.transform;
+            //tmpGameObject.AddComponent<Rigidbody>();
+            //tmpGameObject.GetComponent<Rigidbody>().useGravity = true;
+            //tmpGameObject.GetComponent<Rigidbody>().isKinematic = false;
+            //tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
+
         }
     }
 
