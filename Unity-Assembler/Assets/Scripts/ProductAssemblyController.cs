@@ -14,6 +14,7 @@ public class ProductAssemblyController : MonoBehaviour
         // add MeshColliders to every child component, if child has subparts, add collider to parent
         foreach (Transform child in transform)
         {
+            Debug.Log(child.GetComponents<MeshCollider>().Length);
             if (child.childCount > 0)
             {
                 if (child.GetComponents<MeshCollider>().Length != child.childCount)
