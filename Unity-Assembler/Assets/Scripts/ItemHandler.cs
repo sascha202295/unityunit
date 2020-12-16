@@ -10,7 +10,7 @@ public class ItemHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Transform bicycle;
     //public string name;
     public Transform bicyclePart;
-
+    public GameObject item;
 
 
     void Start()
@@ -51,9 +51,12 @@ public class ItemHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         Debug.Log("clickedd!!!");
         // translates bicycle
-        bicyclePart.transform.Translate(0f, 1.0f,0f);
-        // Detaches the transform from its parent.
-        transform.parent = null;
+        bicyclePart.transform.Translate(0f, 100.0f, 0f);
+        item.transform.Translate(0f, 2.0f, 0f);
+        // Detaches the item from its parent.
+        item.transform.parent = null;
+
+        Destroy(gameObject);
 
         //.... trying to give the bicycle part to the vr hands ...
 

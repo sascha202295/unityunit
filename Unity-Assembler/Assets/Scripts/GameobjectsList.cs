@@ -68,13 +68,13 @@ public class GameobjectsList : MonoBehaviour
                     {
 
                         Transform part = FindChild(bicycle, child.name);
-                        GenerateItem(ContentView, FindChild(bicycle.transform, child.name));
+                        GenerateItem(ContentView, FindChild(bicycle.transform, child.name), child.gameObject);
 
                     }
                 else
                 {
                     Transform part = FindChild(bicycle, childs.name);
-                    GenerateItem(ContentView, part);
+                    GenerateItem(ContentView, part, childs.gameObject);
 
 
                 }
@@ -96,14 +96,16 @@ public class GameobjectsList : MonoBehaviour
         Destroy(klmodell);
     }
 
-    void GenerateItem(Transform contentView, Transform bicyclePart) {
-       GameObject itemPrefab = Instantiate((GameObject)Resources.Load("Item"));
-       ItemHandler itemHandler = itemPrefab.AddComponent<ItemHandler>();
-       itemHandler.bicycle = bicycle;
-       itemHandler.bicyclePart = bicyclePart;
+    void GenerateItem(Transform contentView, Transform bicyclePart, GameObject item)
+    {
+        GameObject itemPrefab = Instantiate((GameObject)Resources.Load("Item"));
+        ItemHandler itemHandler = itemPrefab.AddComponent<ItemHandler>();
+        itemHandler.bicycle = bicycle;
+        itemHandler.bicyclePart = bicyclePart;
+        itemHandler.item = item;
 
-       //itemPrefab.transform.Find("meshItem").GetComponent<MeshFilter>().mesh = itemMesh;
-        
+        //itemPrefab.transform.Find("meshItem").GetComponent<MeshFilter>().mesh = itemMesh;
+
         //meshPrefab.GetComponent<MeshFilter>().mesh = itemMesh;
 
         itemPrefab.transform.SetParent(contentView, false);
