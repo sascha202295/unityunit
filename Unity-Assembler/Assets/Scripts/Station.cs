@@ -33,12 +33,7 @@ public class Station : MonoBehaviour
 
     public void createStation(Vector3 position, List<GameObject> gameObjects)
     {
-        Debug.LogWarning(position + "" + gameObjects);
-        foreach (GameObject mobject in gameObjects)
-        {
-            Debug.LogWarning(mobject.name);
-        }
-
+        Debug.LogWarning("listsize = " + gameObjects.Count);
         if (maxNumberOfStations > numberOfStations)
         {
             modelObjects = gameObjects;
@@ -47,7 +42,7 @@ public class Station : MonoBehaviour
             stationModelPodest = Instantiate((GameObject) Resources.Load("ModelPrep"));
             stationModelPodest.name = station.name + " - Model";
             stationModelPodest.transform.parent = station.transform;
-            stationModelPodest.transform.localPosition = position + new Vector3(0, 0.2f, 0);
+            stationModelPodest.transform.localPosition = new Vector3(0, 0.2f, 0);
             stationModelPodest.AddComponent<ModelPlan>();
             ModelPlan mp = stationModelPodest.GetComponent<ModelPlan>();
             mp.setMaterial((Material)Resources.Load("CycleTransparent"));

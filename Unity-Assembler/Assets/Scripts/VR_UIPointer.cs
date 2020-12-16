@@ -16,19 +16,21 @@ public class VR_UIPointer : MonoBehaviour
 
 
     private LineRenderer mLinerenderer = null;
-    public List<GameObject> mSelectedParts {get; private set;}
+    public List<GameObject> mSelectedParts { get; private set; }
     public GameObject mPartpickerScreen;
     private PartpickerScreen partpicker;
 
-    void Awake()
+    public void Awake()
     {
         mLinerenderer = GetComponent<LineRenderer>();
         partpicker = mPartpickerScreen.GetComponent<PartpickerScreen>();
     }
-    
-    void Update()
+
+    public void Update()
     {
         PointerEventData data = mInputmodule.GetData();
+
+        // set pointer length to mDefaultLength if no collision
         float targetLength = data.pointerCurrentRaycast.distance == 0 ? mDefaultLength : data.pointerCurrentRaycast.distance;
 
         RaycastHit hit = CreateRaycast(targetLength);
@@ -54,20 +56,6 @@ public class VR_UIPointer : MonoBehaviour
                 }
             }
         }
-
-        /*
-        if(createStation)
-        {
-            // TODO get position vector similar to teleport
-            if (mClickAction.GetStateDown(mTargetSource))
-            {
-                station = new Station();
-                Vector3 position = hit.collider.transform.position;
-                station.createStation(position, mSelectedParts);
-                createStation = false;
-            }
-        }
-        */
     }
 
     private RaycastHit CreateRaycast(float length)
@@ -88,21 +76,30 @@ public class VR_UIPointer : MonoBehaviour
         if (mSelectedParts.Contains(part))
         {
             // remove item from selection
-            setObjectColor(part.transform, Color.white);
+            SetObjectColor(part.transform, Color.white);
 
             mSelectedParts.Remove(part);
-            partpicker.removeItemFromList(part);
+            partpicker.RemoveItemFromList(part);
         }
         else
         {
             // add item to selection
-            setObjectColor(part.transform, Color.red);
+            SetObjectColor(part.transform, Color.red);
             mSelectedParts.Add(part);
-            partpicker.addNewItemToList(part);
+            partpicker.AddNewItemToList(part);
         }
     }
 
-    private void setObjectColor(Transform mTransform, Color color)
+    public void DeselectParts()
+    {
+        foreach (GameObject part in mSelectedParts)
+        {
+            SetObjectColor(part.transform, Color.white);
+        }
+        mSelectedParts = null;
+    }
+
+    public static void SetObjectColor(Transform mTransform, Color color)
     {
         if (mTransform.childCount > 0)
         {
@@ -120,6 +117,21 @@ public class VR_UIPointer : MonoBehaviour
             {
                 mTransform.gameObject.GetComponent<Renderer>().material.color = color;
             }
+        }
+    }
+
+    public static void SetObjectMaterial(Transform mTransform, Material mMaterial)
+    {
+        if (mTransform.childCount > 0)
+        {
+            foreach (Transform child in mTransform)
+            {
+                child.gameObject.GetComponent<Renderer>().material = mMaterial;
+            }
+        }
+        else
+        {
+            mTransform.gameObject.GetComponent<Renderer>().material = mMaterial;
         }
     }
 }

@@ -15,54 +15,52 @@ public class PartpickerScreen : MonoBehaviour
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Action_Boolean mClickAction;
 
-    public List<GameObject> itemGameObjects = null;
+    private List<GameObject> pickedpartsList = null;
+    private Material disabledParts;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        disabledParts = (Material)Resources.Load("CycleTransparent");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddNewItemToList(GameObject modelGameObject)
     {
-        
-    }
-
-    public void addNewItemToList(GameObject modelGameObject)
-    {
-        itemGameObjects.Add(modelGameObject);
-        updateScrollView();
-    }
-
-    public void removeItemFromList(GameObject modelGameObject)
-    {
-        itemGameObjects.Remove(modelGameObject);
-        updateScrollView();
-    }
-
-    void updateScrollView()
-    {
-        for (int i = 0; i < mListItemSpawnpoint.transform.childCount; i++)
+        if (pickedpartsList == null)
         {
-            Destroy(mListItemSpawnpoint.transform.GetChild(i).gameObject);
+            pickedpartsList = new List<GameObject>();
         }
+        pickedpartsList.Add(modelGameObject);
+        UpdateScrollView();
+    }
 
-        for (int ii = 0; ii < itemGameObjects.Count; ii++)
+    public void RemoveItemFromList(GameObject modelGameObject)
+    {
+        if (pickedpartsList != null)
         {
-            float spawnY = ii * 40;
-            //newSpawn Position
-            Vector3 pos = new Vector3(mListItemSpawnpoint.position.x, -spawnY, mListItemSpawnpoint.position.z);
-            Debug.Log(itemGameObjects[ii] + ": " + spawnY + ": " + pos);
-            //instantiate item
-            mListItem.transform.position = pos;
-            GameObject SpawnedItem = Instantiate(mListItem);
-            //setParent
-            SpawnedItem.transform.SetParent(mListItemSpawnpoint.transform, false);
-            //get ItemDetails Component
-            ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
-            //set name
-            itemDetails.text.text = itemGameObjects[ii].name;
+            pickedpartsList.Remove(modelGameObject);
+        }
+        UpdateScrollView();
+    }
+
+    void UpdateScrollView()
+    {
+        // delete preexisting items
+        foreach (Transform listItem in mListItemSpawnpoint.transform)
+        {
+            Destroy(listItem.gameObject);
+        }
+        // populate list if there are any
+        if (pickedpartsList != null)
+        {
+            foreach (GameObject part in pickedpartsList)
+            {
+                //instantiate item ans set parent
+                GameObject SpawnedItem = Instantiate(mListItem, mListItemSpawnpoint.transform, false);
+                //get ItemDetails Component
+                ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
+                //set name
+                itemDetails.text.text = part.name;
+            }
         }
     }
 
@@ -81,11 +79,33 @@ public class PartpickerScreen : MonoBehaviour
 
     public void CreateStation()
     {
-        laserStationPlacer.enableStationPlacement = true;
+        laserStationPlacer.EnableStationPlacer(pickedpartsList);
+        mUiPointer.SetActive(false);
+        VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
+        tmpUiPointer.DeselectParts();
+        foreach (GameObject part in pickedpartsList)
+        {
+            VR_UIPointer.SetObjectMaterial(part.transform, disabledParts);
+            VR_UIPointer.SetObjectColor(part.transform, new Color(0f, 1f, 0f, 0.1f));
+            RemoveAllMeshColliders(part);
+        }
+        pickedpartsList = null;
+        UpdateScrollView();
+        // disable partpicker functionality
+        /* 
         VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
         tmpUiPointer.enablePartpicker = false;
-        mUiPointer.SetActive(false);
         Toggle tmpTogglePartpicker = (Toggle) transform.Find("Toggle_Partpicker").GetComponent("Toggle");
         tmpTogglePartpicker.isOn = false;
+        */
+    }
+
+    public static void RemoveAllMeshColliders(GameObject mGameObject)
+    {
+        MeshCollider[] colliders = mGameObject.transform.GetComponents<MeshCollider>();
+        foreach (MeshCollider collider in colliders)
+        {
+            Destroy(collider);
+        }
     }
 }

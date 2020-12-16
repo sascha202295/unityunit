@@ -10,7 +10,7 @@ public class LaserStationPlacer : MonoBehaviour
     public SteamVR_Behaviour_Pose controllerPose;
     public SteamVR_Action_Boolean mPlaceStationAction;
     public VR_UIPointer mUIPointer;
-    public bool enableStationPlacement = false;
+    private bool enableStationPlacement = false;
 
     public GameObject laserPrefab;
     private GameObject laser;
@@ -20,6 +20,8 @@ public class LaserStationPlacer : MonoBehaviour
     private GameObject stationPreview;
     public Vector3 teleportReticleOffset;
     public LayerMask StationPlacementMask;
+
+    private List<GameObject> parts = null;
 
     // Start is called before the first frame update
     void Start()
@@ -43,14 +45,34 @@ public class LaserStationPlacer : MonoBehaviour
                 stationPreview.SetActive(true);
                 stationPreview.transform.position = hit.point + teleportReticleOffset;
             }
-            if (mPlaceStationAction.GetStateDown(mTargetSource))
+            else
             {
-                CreateStation(hit);
-                enableStationPlacement = false;
                 laser.SetActive(false);
                 stationPreview.SetActive(false);
             }
+            if (mPlaceStationAction.GetStateDown(mTargetSource))
+            {
+                enableStationPlacement = false;
+                laser.SetActive(false);
+                stationPreview.SetActive(false);
+                CreateStation(hit);
+            }
         }
+    }
+
+    public void EnableStationPlacer(List<GameObject> selectedParts)
+    {
+        enableStationPlacement = true;
+        parts = selectedParts;
+
+        /*new List<GameObject>();
+    foreach (GameObject part in selectedParts)
+    {
+        GameObject tmp = Instantiate(part);
+        tmp.transform.position = tmp.transform.position + new Vector3
+        parts.Add(Instantiate(part));
+        pa
+    }*/
     }
 
     private void ShowLaser(RaycastHit hit)
@@ -66,7 +88,7 @@ public class LaserStationPlacer : MonoBehaviour
     private void CreateStation(RaycastHit hit)
     {
         Station station = new Station();
-        station.createStation(hit.point, mUIPointer.mSelectedParts);
+        station.createStation(hit.point, parts);
     }
 
 }
