@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
 
 public class Station : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class Station : MonoBehaviour
     private GameObject stationModelPodest;
     private int numberOfStations = 0;
     private const int maxNumberOfStations = 50;
+
+    public SteamVR_Action_Boolean mPlaceStationAction;
+    public SteamVR_Input_Sources mTargetSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +56,31 @@ public class Station : MonoBehaviour
             PartsOnTable(position, station);
             stations.Add(station);
             numberOfStations++;
+
+            //rotate station on creation
+      /* 1st while loop- wait until the pressed button is released ,2nd while loop rotate station using left and right controllers and press button to terminate
+
+            while (true)
+            {
+                if (mPlaceStationAction.GetStateUp(mTargetSource))
+                 break;
+                
+            }
+
+            while (true)
+            {    
+
+                        if left() {
+                            station.transform.Rotate(0, 5f, 0);
+                        }
+                        else right() {
+                            station.transform.Rotate(0, -5f, 0);
+                        }
+                        if (mPlaceStationAction.GetStateDown(mTargetSource)) { 
+                            break;
+                        }
+            }
+      */
         } else
         {
             // TODO: maybe show dialog max number of stations
