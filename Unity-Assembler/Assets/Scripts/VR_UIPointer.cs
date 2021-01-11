@@ -23,7 +23,10 @@ public class VR_UIPointer : MonoBehaviour
     public void Awake()
     {
         mLinerenderer = GetComponent<LineRenderer>();
-        partpicker = mPartpickerScreen.GetComponent<PartpickerScreen>();
+        if (mPartpickerScreen != null)
+        {
+            partpicker = mPartpickerScreen.GetComponent<PartpickerScreen>();
+        }
     }
 
     public void Update()

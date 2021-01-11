@@ -10,10 +10,12 @@ public class ProductAssemblyCollider : MonoBehaviour
 
     private GameObject collidingObject = null;
 
+    private Material placedPartMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        placedPartMaterial = (Material) Resources.Load("CycleWhite");
     }
 
     void Update()
@@ -30,6 +32,7 @@ public class ProductAssemblyCollider : MonoBehaviour
 
     private void PlaceObject()
     {
+        setObjectMaterial(transform, placedPartMaterial);
         setObjectColor(transform, new Color(1f, 1f, 1f, 1.0f));
         Destroy(collidingObject);
         collidingObject = null;
@@ -82,11 +85,11 @@ public class ProductAssemblyCollider : MonoBehaviour
         setObjectColor(transform, new Color(1f, 1f, 1f, 0.4f));
     }
 
-    private void setObjectColor(Transform mTransform, Color color)
+    private void setObjectColor(Transform transform, Color color)
     {
-        if (mTransform.childCount > 0)
+        if (transform.childCount > 0)
         {
-            foreach (Transform child in mTransform)
+            foreach (Transform child in transform)
             {
                 if (child.gameObject.GetComponent<Renderer>().material != null)
                 {
@@ -96,10 +99,25 @@ public class ProductAssemblyCollider : MonoBehaviour
         }
         else
         {
-            if (mTransform.gameObject.gameObject.GetComponent<Renderer>().material != null)
+            if (transform.gameObject.GetComponent<Renderer>().material != null)
             {
-                mTransform.gameObject.GetComponent<Renderer>().material.color = color;
+                transform.gameObject.GetComponent<Renderer>().material.color = color;
             }
+        }
+    }
+
+    private void setObjectMaterial(Transform transform, Material material)
+    {
+        if (transform.childCount > 0)
+        {
+            foreach (Transform child in transform)
+            {
+                child.gameObject.GetComponent<Renderer>().material = material;
+            }
+        }
+        else
+        {
+            transform.gameObject.GetComponent<Renderer>().material = material;
         }
     }
 }
