@@ -16,7 +16,8 @@ public class LaserStationPlacer : MonoBehaviour
     private GameObject laser;
     private Transform laserTransform;
 
-    GameObject stationPreview;
+    public GameObject StationPreviewPrefab;
+    private GameObject stationPreview;
     public Vector3 teleportReticleOffset;
     public LayerMask StationPlacementMask;
 
@@ -28,6 +29,7 @@ public class LaserStationPlacer : MonoBehaviour
         laser = Instantiate(laserPrefab);
         laserTransform = laser.transform;
         laser.GetComponent<Renderer>().material.color = Color.green;
+        stationPreview = Instantiate(StationPreviewPrefab);
     }
 
     // Update is called once per frame
@@ -52,6 +54,8 @@ public class LaserStationPlacer : MonoBehaviour
             {
                 enableStationPlacement = false;
                 laser.SetActive(false);
+                stationPreview.SetActive(false);
+                CreateStation(hit);
             }
         }
     }
@@ -66,9 +70,6 @@ public class LaserStationPlacer : MonoBehaviour
             tmp.transform.position = tmp.transform.position + new Vector3(0f, -50f, 0f);
             parts.Add(tmp);
         }
-        StationFactory station = new StationFactory();
-        stationPreview = station.CreateStation(Vector3.zero, parts);
-        stationPreview.SetActive(false);
     }
 
     private void ShowLaser(RaycastHit hit)
@@ -79,6 +80,12 @@ public class LaserStationPlacer : MonoBehaviour
         laserTransform.localScale = new Vector3(laserTransform.localScale.x,
                                                 laserTransform.localScale.y,
                                                 hit.distance);
+    }
+
+    private void CreateStation(RaycastHit hit)
+    {
+        Station station = new Station();
+        station.createStation(hit.point, parts);
     }
 
 }
