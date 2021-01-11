@@ -57,7 +57,7 @@ public class ModelPlan : MonoBehaviour
         });
 
         modelObject.transform.localPosition = new Vector3(0, 0.4f, -0.2f);
-        modelObject.transform.localScale = new Vector3(4.0f / 3.0f, 5, 0.4f);
+        gameObject.transform.localScale = new Vector3(1f, 0.3f, 4f);
     }
 
     public void setMaterial(Material material)
