@@ -5,21 +5,21 @@ using UnityEngine;
 public class Station
 {
 
-    List<Part> partList;
-    List<Station> previousStations;
-    Vector3 Position { get; set; }
-    Quaternion Rotation { get; set; }
+    public List<Part> PartList { get; }
+    public List<Station> PreviousStations { get; }
+    public Vector3 Position { get; set; }
+    public Quaternion Rotation { get; set; }
 
     public Station(List<Part> partList, List<Station> previousStations)
     {
-        this.partList = partList;
-        this.previousStations = previousStations;
+        this.PartList = partList;
+        this.PreviousStations = previousStations;
     }
 
     public Station(List<Part> partList, Station previousStation)
     {
-        this.partList = partList;
-        previousStations = new List<Station>
+        this.PartList = partList;
+        PreviousStations = new List<Station>
         {
             previousStation
         };
@@ -27,15 +27,15 @@ public class Station
 
     public Station(List<Part> partList)
     {
-        this.partList = partList;
-        previousStations = null;
+        this.PartList = partList;
+        PreviousStations = null;
     }
 
     public bool AddPart(Part part)
     {
-        if (!partList.Contains(part))
+        if (!PartList.Contains(part))
         {
-            partList.Add(part);
+            PartList.Add(part);
             return true;
         }
         return false;
@@ -43,6 +43,17 @@ public class Station
 
     public bool RemovePart(Part part)
     {
-        return partList.Remove(part);
+        return PartList.Remove(part);
+    }
+
+    public List<Part> getPreviousStationsParts()
+    {
+        List<Part> tmpParts = new List<Part>();
+        foreach(Station prevStation in PreviousStations)
+        {
+            tmpParts.AddRange(prevStation.PartList);
+            tmpParts.AddRange(prevStation.getPreviousStationsParts());
+        }
+        return tmpParts;
     }
 }

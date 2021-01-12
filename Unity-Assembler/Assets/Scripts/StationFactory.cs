@@ -5,78 +5,70 @@ using UnityEngine;
 
 public class StationFactory
 {
-    static List<GameObject> stations;
-    public List<GameObject> TestList;
-    List<GameObject> modelObjects;
-    List<GameObject> modelMontagePlan;
-    public GameObject modelPodest;
-    public Material material;
 
-    public GameObject chest;
-    private GameObject station;
-    private GameObject stationModelPodest;
-    private int numberOfStations = 0;
+    public Material materialTransparent;
+    public Material materialOpaque;
+    private Vector3 scale = new Vector3(1.5f, 1.5f, 1.5f);
+
+    private static int numberOfStations = 0;
     private const int maxNumberOfStations = 50;
+
+    private GameObject tmpStation;
+    private GameObject stationModelPodest;
+    private GameObject stationModel;
+    private List<GameObject> modelObjects;
 
     public StationFactory()
     {
-        stations = new List<GameObject>();
+        materialTransparent = (Material)Resources.Load("CycleTransparent");
+        materialOpaque = (Material)Resources.Load("CycleWhite");
+        modelObjects = new List<GameObject>();
     }
 
-    public GameObject CreateStation(Vector3 position, List<GameObject> gameObjects)
+    public GameObject CreateStation(Station station)
     {
-        Debug.LogWarning("listsize = " + gameObjects.Count);
         if (maxNumberOfStations > numberOfStations)
         {
-            modelObjects = gameObjects;
-            station = new GameObject("Station" + numberOfStations);
-            station.transform.position = position;
+            //create station object
+            tmpStation = new GameObject("Station" + numberOfStations);
+            tmpStation.transform.position = station.Position;
+
+            //create station model
             stationModelPodest = GameObject.Instantiate((GameObject)Resources.Load("ModelPrep"));
-            stationModelPodest.name = station.name + " - Model";
-            stationModelPodest.transform.parent = station.transform;
+            stationModelPodest.name = tmpStation.name + " - Model";
+            stationModelPodest.transform.parent = tmpStation.transform;
             stationModelPodest.transform.localPosition = new Vector3(-1.25f, 0.07f, -0.75f);
-            stationModelPodest.AddComponent<ModelPlan>();
-            ModelPlan mp = stationModelPodest.GetComponent<ModelPlan>();
-            mp.setMaterial((Material)Resources.Load("CycleTransparent"));
-            mp.createModel(gameObjects);
-            modelMontagePlan = new List<GameObject>();
-            PartsOnTable(position, station);
-            stations.Add(station);
+            Vector3.Scale(stationModelPodest.transform.localScale, scale);
+
+            stationModel = GameObject.Instantiate((GameObject)Resources.Load("Cyclev2"));
+            Vector3.Scale(stationModel.transform.localScale, scale);
+            stationModel.transform.localPosition = stationModel.transform.localPosition + new Vector3(0, 0.4f, -0.2f);
+            foreach(Transform modelPart in stationModel.transform)
+            {
+                modelPart.gameObject.SetActive(false);
+            }
+            foreach(Part part in station.PartList)
+            {
+                Transform partObject = stationModel.transform.GetChild(part.PartID);
+                partObject.gameObject.SetActive(true);
+                modelObjects.Add(partObject.gameObject);
+            }
+            //TODO enable and color parts of previous stations and color them differently
+
+            //place StationScreen
+
+            //place parts on Tables
+            PartsOnTable(tmpStation);
             numberOfStations++;
-
-            //rotate station on creation
-            /* 1st while loop- wait until the pressed button is released ,2nd while loop rotate station using left and right controllers and press button to terminate
-
-                  while (true)
-                  {
-                      if (mPlaceStationAction.GetStateUp(mTargetSource))
-                       break;
-
-                  }
-
-                  while (true)
-                  {    
-
-                              if left() {
-                                  station.transform.Rotate(0, 5f, 0);
-                              }
-                              else right() {
-                                  station.transform.Rotate(0, -5f, 0);
-                              }
-                              if (mPlaceStationAction.GetStateDown(mTargetSource)) { 
-                                  break;
-                              }
-                  }
-            */
         }
         else
         {
             // TODO: maybe show dialog max number of stations
         }
-        return station;
+        return tmpStation;
     }
 
-    private void PartsOnTable(Vector3 position, GameObject station)
+    private void PartsOnTable(GameObject station)
     {
         GameObject table_small = (GameObject)Resources.Load("Pref_Station_Small");
         for (int i = 0; i < modelObjects.Count; i++)
@@ -85,10 +77,10 @@ public class StationFactory
             tmpTable.AddComponent<Rigidbody>();
             tmpTable.GetComponent<Rigidbody>().isKinematic = true;
             tmpTable.AddComponent<BoxCollider>();
-            tmpTable.transform.position = position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(-0.75f, 0.8f, 1.25f);
+            tmpTable.transform.position = station.transform.position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(-0.75f, 0.8f, 1.25f);
             tmpTable.transform.parent = station.transform;
 
-            GameObject tmpGameObject = GameObject.Instantiate(modelObjects[i], position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(-0.75f, 1f, 0.75f), Quaternion.Euler(0, 0, 90));
+            GameObject tmpGameObject = GameObject.Instantiate(modelObjects[i], station.transform.position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(-0.75f, 1f, 0.75f), Quaternion.Euler(0, 0, 90));
 
             tmpGameObject.transform.parent = station.transform;
             tmpGameObject.AddComponent<Rigidbody>();
@@ -105,15 +97,5 @@ public class StationFactory
             //tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
 
         }
-    }
-
-    void AddToModelPlan(GameObject gameObject)
-    {
-        modelMontagePlan.Add(gameObject);
-    }
-
-    void RemoveFromModelPlan(GameObject gameObject)
-    {
-        modelMontagePlan.Remove(gameObject);
     }
 }
