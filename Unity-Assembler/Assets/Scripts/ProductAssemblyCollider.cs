@@ -32,8 +32,8 @@ public class ProductAssemblyCollider : MonoBehaviour
 
     private void PlaceObject()
     {
-        setObjectMaterial(transform, placedPartMaterial);
-        setObjectColor(transform, new Color(1f, 1f, 1f, 1.0f));
+        Utils.SetObjectMaterial(transform, placedPartMaterial);
+        Utils.SetObjectColor(transform, new Color(1f, 1f, 1f, 1.0f));
         Destroy(collidingObject);
         collidingObject = null;
     }
@@ -44,20 +44,13 @@ public class ProductAssemblyCollider : MonoBehaviour
         {
             return;
         }
-        
-        if(col.transform.parent != null && col.transform.parent.name == transform.name)
-        {
-            collidingObject = col.transform.parent.gameObject;
-
-            // set Color to green
-            setObjectColor(transform, new Color(0f, 1f, 0f, 0.4f));
-        } 
-        else if(col.transform.name == transform.name)
+        //check if part names match, filtering the unity added "(Clone)"
+        else if (col.transform.name.Replace("(Clone)", "").Equals(transform.name.Replace("(Clone)", "")))
         {
             collidingObject = col.gameObject;
 
             // set Color to green
-            setObjectColor(transform, new Color(0f, 1f, 0f, 0.4f));
+            Utils.SetObjectColor(transform, new Color(0f, 1f, 0f, 0.4f));
         }
         
     }
@@ -82,42 +75,8 @@ public class ProductAssemblyCollider : MonoBehaviour
         collidingObject = null;
 
         // set Color to white
-        setObjectColor(transform, new Color(1f, 1f, 1f, 0.4f));
+        Utils.SetObjectColor(transform, new Color(1f, 1f, 1f, 0.4f));
     }
 
-    private void setObjectColor(Transform transform, Color color)
-    {
-        if (transform.childCount > 0)
-        {
-            foreach (Transform child in transform)
-            {
-                if (child.gameObject.GetComponent<Renderer>().material != null)
-                {
-                    child.gameObject.GetComponent<Renderer>().material.color = color;
-                }
-            }
-        }
-        else
-        {
-            if (transform.gameObject.GetComponent<Renderer>().material != null)
-            {
-                transform.gameObject.GetComponent<Renderer>().material.color = color;
-            }
-        }
-    }
 
-    private void setObjectMaterial(Transform transform, Material material)
-    {
-        if (transform.childCount > 0)
-        {
-            foreach (Transform child in transform)
-            {
-                child.gameObject.GetComponent<Renderer>().material = material;
-            }
-        }
-        else
-        {
-            transform.gameObject.GetComponent<Renderer>().material = material;
-        }
-    }
 }

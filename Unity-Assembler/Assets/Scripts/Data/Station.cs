@@ -52,13 +52,13 @@ public class Station
         return PartList.Remove(part);
     }
 
-    public List<Part> getPreviousStationsParts()
+    public List<Part> GetPreviousStationsParts()
     {
         List<Part> tmpParts = new List<Part>();
         foreach(Station prevStation in PreviousStations)
         {
             tmpParts.AddRange(prevStation.PartList);
-            tmpParts.AddRange(prevStation.getPreviousStationsParts());
+            tmpParts.AddRange(prevStation.GetPreviousStationsParts());
         }
         return tmpParts;
     }

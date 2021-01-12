@@ -12,16 +12,18 @@ public class PartpickerScreen : MonoBehaviour
     public Transform mListItemSpawnpoint;
     public GameObject mListItem;
     public PreviousStationController previousStationController;
+    public StationManager stationManager;
 
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Action_Boolean mClickAction;
 
     private List<Part> pickedpartsList = null;
-    private Material disabledParts;
+    private Material materialTransparent;
 
     void Start()
     {
-        disabledParts = (Material)Resources.Load("CycleTransparent");
+        materialTransparent = (Material)Resources.Load("CycleTransparent");
+        GetComponentInChildren<Canvas>().worldCamera = mUiPointer.GetComponent<Camera>();
     }
 
     public void AddNewItemToList(Part part)
@@ -80,34 +82,37 @@ public class PartpickerScreen : MonoBehaviour
 
     public void CreateStation()
     {
-        if (previousStationController.IsSelectionConfirmed())
+        //if (previousStationController.IsSelectionConfirmed())
+
+        GameObject partPickerModel = transform.parent.GetComponent<StationManager>().PartPickerModel;
+
+        Station station = new Station(pickedpartsList, previousStationController.GetChosenStations());
+        laserStationPlacer.EnableStationPlacer(station);
+        mUiPointer.SetActive(false);
+        VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
+        tmpUiPointer.DeselectParts();
+        foreach (Part part in pickedpartsList)
         {
-            Station station = new Station(pickedpartsList, previousStationController.GetChoosenStations());
-            laserStationPlacer.EnableStationPlacer(station);
-            mUiPointer.SetActive(false);
-            VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
-            tmpUiPointer.DeselectParts();
-            /*foreach (Part part in pickedpartsList)
-            {
-                VR_UIPointer.SetObjectMaterial(part.transform, disabledParts);
-                VR_UIPointer.SetObjectColor(part.transform, new Color(0f, 1f, 0f, 0.1f));
-                RemoveAllMeshColliders(part);
-            }*/
-            pickedpartsList = null;
-            UpdateScrollView();
-            // disable partpicker functionality
-            /* 
-            VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
-            tmpUiPointer.enablePartpicker = false;
-            Toggle tmpTogglePartpicker = (Toggle) transform.Find("Toggle_Partpicker").GetComponent("Toggle");
-            tmpTogglePartpicker.isOn = false;
-            */
+            Utils.SetObjectMaterial(partPickerModel.transform.GetChild(part.PartID), materialTransparent);
+            Utils.SetObjectColor(partPickerModel.transform.GetChild(part.PartID), new Color(0f, 1f, 0f, 0.1f));
+            RemoveAllMeshColliders(partPickerModel.transform.GetChild(part.PartID));
         }
+        pickedpartsList = null;
+        stationManager.AddStation(station);
+        UpdateScrollView();
+        // disable partpicker functionality
+        /* 
+        VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
+        tmpUiPointer.enablePartpicker = false;
+        Toggle tmpTogglePartpicker = (Toggle) transform.Find("Toggle_Partpicker").GetComponent("Toggle");
+        tmpTogglePartpicker.isOn = false;
+        */
+
     }
 
-    public static void RemoveAllMeshColliders(GameObject mGameObject)
+    public static void RemoveAllMeshColliders(Transform transform)
     {
-        MeshCollider[] colliders = mGameObject.transform.GetComponents<MeshCollider>();
+        MeshCollider[] colliders = transform.GetComponents<MeshCollider>();
         foreach (MeshCollider collider in colliders)
         {
             Destroy(collider);

@@ -11,7 +11,7 @@ public class LaserStationPlacer : MonoBehaviour
     public SteamVR_Action_Boolean mPlaceStationAction;
     public SteamVR_Action_Boolean mRotateStationRight;
     public SteamVR_Action_Boolean mRotateStationLeft;
-    public VR_UIPointer mUIPointer;
+    public GameObject mUIPointer;
     private bool enableStationPlacement = false;
 
     public GameObject laserPrefab;
@@ -71,7 +71,7 @@ public class LaserStationPlacer : MonoBehaviour
     {
         enableStationPlacement = true;
         StationFactory stationFactory = new StationFactory();
-        stationPreview = stationFactory.CreateStation(station);
+        stationPreview = stationFactory.CreateStation(station, mUIPointer);
         this.station = station;
         stationPreview.SetActive(false);
     }

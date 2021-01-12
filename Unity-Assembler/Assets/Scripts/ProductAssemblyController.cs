@@ -5,16 +5,14 @@ using Valve.VR;
 
 public class ProductAssemblyController : MonoBehaviour
 {
-    public bool mAddProductAssemblyCollider = false;
     public SteamVR_Input_Sources mHandType;
     public SteamVR_Action_Boolean mGrabAction;
 
-    void Start()
+    void Awake()
     {
         // add MeshColliders to every child component, if child has grandchildren, add their collider to child
         foreach (Transform child in transform)
         {
-            Debug.Log(child.GetComponents<MeshCollider>().Length);
             if (child.childCount > 0)
             {
                 if (child.GetComponents<MeshCollider>().Length != child.childCount)
@@ -30,16 +28,19 @@ public class ProductAssemblyController : MonoBehaviour
             }
             else if (child.GetComponent<MeshFilter>() != null)
             {
-                
                 if (child.GetComponents<MeshCollider>().Length != 1)
                     AddMeshColliderTriggerTo(child.gameObject, child.GetComponent<MeshFilter>().sharedMesh);
             }
-            if (mAddProductAssemblyCollider)
-            {
-                ProductAssemblyCollider tmp = child.gameObject.AddComponent<ProductAssemblyCollider>();
-                tmp.mHandType = this.mHandType;
-                tmp.mGrabAction = this.mGrabAction;
-            }
+        }
+    }
+
+    public void AddProductAssemblyColliders()
+    {
+        foreach (Transform child in transform)
+        {
+            ProductAssemblyCollider tmp = child.gameObject.AddComponent<ProductAssemblyCollider>();
+            tmp.mHandType = this.mHandType;
+            tmp.mGrabAction = this.mGrabAction;
         }
     }
 

@@ -95,7 +95,7 @@ public class PreviousStationController : MonoBehaviour
         return selectionConfirmed;
     }
 
-    public List<Station> GetChoosenStations()
+    public List<Station> GetChosenStations()
     {
         return choosenStations;
     }

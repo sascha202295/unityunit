@@ -16,8 +16,9 @@ public class VR_UIPointer : MonoBehaviour
 
 
     private LineRenderer mLinerenderer = null;
-    public List<GameObject> mSelectedParts { get; private set; }
+    public List<Part> mSelectedParts { get; private set; }
     public GameObject mPartpickerScreen;
+    private GameObject PartPickerModel;
     private PartpickerScreen partpicker;
 
     public void Awake()
@@ -53,7 +54,7 @@ public class VR_UIPointer : MonoBehaviour
         {
             if (mClickAction.GetStateDown(mTargetSource))
             {
-                if (hit.collider != null && hit.collider.gameObject.transform.root.GetComponent<ProductAssemblyController>() != null)
+                if (hit.collider != null && hit.collider.gameObject.transform.parent.GetComponent<ProductAssemblyController>() != null)
                 {
                     ProcessPartPicker(hit.collider.gameObject);
                 }
@@ -70,71 +71,41 @@ public class VR_UIPointer : MonoBehaviour
         return hit;
     }
 
-    private void ProcessPartPicker(GameObject part)
+    private void ProcessPartPicker(GameObject partGameObject)
     {
+        Part tmp = Part.Parts[partGameObject.transform.GetSiblingIndex()];
+
+        if (PartPickerModel == null)
+        {
+            PartPickerModel = partGameObject.transform.parent.gameObject;
+        }
         if (mSelectedParts == null)
         {
-            mSelectedParts = new List<GameObject>();
+            mSelectedParts = new List<Part>();
         }
-        if (mSelectedParts.Contains(part))
+        if (mSelectedParts.Contains(tmp))
         {
             // remove item from selection
-            SetObjectColor(part.transform, Color.white);
+            Utils.SetObjectColor(partGameObject.transform, Color.white);
 
-            mSelectedParts.Remove(part);
-            partpicker.RemoveItemFromList(part);
+            mSelectedParts.Remove(tmp);
+            partpicker.RemoveItemFromList(tmp);
         }
         else
         {
             // add item to selection
-            SetObjectColor(part.transform, Color.red);
-            mSelectedParts.Add(part);
-            partpicker.AddNewItemToList(part);
+            Utils.SetObjectColor(partGameObject.transform, Color.red);
+            mSelectedParts.Add(tmp);
+            partpicker.AddNewItemToList(tmp);
         }
     }
 
     public void DeselectParts()
     {
-        foreach (GameObject part in mSelectedParts)
+        foreach (Part part in mSelectedParts)
         {
-            SetObjectColor(part.transform, Color.white);
+            Utils.SetObjectColor(PartPickerModel.transform.GetChild(part.PartID), Color.white);
         }
         mSelectedParts = null;
-    }
-
-    public static void SetObjectColor(Transform mTransform, Color color)
-    {
-        if (mTransform.childCount > 0)
-        {
-            foreach (Transform child in mTransform)
-            {
-                if (child.gameObject.GetComponent<Renderer>().material != null)
-                {
-                    child.gameObject.GetComponent<Renderer>().material.color = color;
-                }
-            }
-        }
-        else
-        {
-            if (mTransform.gameObject.gameObject.GetComponent<Renderer>().material != null)
-            {
-                mTransform.gameObject.GetComponent<Renderer>().material.color = color;
-            }
-        }
-    }
-
-    public static void SetObjectMaterial(Transform mTransform, Material mMaterial)
-    {
-        if (mTransform.childCount > 0)
-        {
-            foreach (Transform child in mTransform)
-            {
-                child.gameObject.GetComponent<Renderer>().material = mMaterial;
-            }
-        }
-        else
-        {
-            mTransform.gameObject.GetComponent<Renderer>().material = mMaterial;
-        }
     }
 }

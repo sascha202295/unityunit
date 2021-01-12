@@ -8,7 +8,14 @@ public class StationFactory
 
     public Material materialTransparent;
     public Material materialOpaque;
+
+    private Vector3 stationModelOffset = new Vector3(-1.25f, 0, -0.75f);
+    private Vector3 stationModelPedestalOffset = new Vector3(0, 0.06f, 0);
+    private Vector3 stationModelModelOffset = new Vector3(0, 0.25f, -0.8f);
+    private Vector3 stationScreenOffset = new Vector3(-2.0f, 0.0f, 1.0f);
     private Vector3 scale = new Vector3(1.5f, 1.5f, 1.5f);
+
+    private Color partPreviousStationColor = new Color(0.1f, 0.1f, 0.1f, 0.05f);
 
     private static int numberOfStations = 0;
     private const int maxNumberOfStations = 50;
@@ -25,7 +32,7 @@ public class StationFactory
         modelObjects = new List<GameObject>();
     }
 
-    public GameObject CreateStation(Station station)
+    public GameObject CreateStation(Station station, GameObject ui_Pointer)
     {
         if (maxNumberOfStations > numberOfStations)
         {
@@ -33,30 +40,46 @@ public class StationFactory
             tmpStation = new GameObject("Station" + numberOfStations);
             tmpStation.transform.position = station.Position;
 
-            //create station model
-            stationModelPodest = GameObject.Instantiate((GameObject)Resources.Load("ModelPrep"));
-            stationModelPodest.name = tmpStation.name + " - Model";
-            stationModelPodest.transform.parent = tmpStation.transform;
-            stationModelPodest.transform.localPosition = new Vector3(-1.25f, 0.07f, -0.75f);
-            Vector3.Scale(stationModelPodest.transform.localScale, scale);
+            GameObject model = new GameObject();
+            model.transform.name = tmpStation.name + " - Model";
+            model.transform.parent = tmpStation.transform;
+            model.transform.localPosition = stationModelOffset;
 
-            stationModel = GameObject.Instantiate((GameObject)Resources.Load("Cyclev2"));
-            Vector3.Scale(stationModel.transform.localScale, scale);
-            stationModel.transform.localPosition = stationModel.transform.localPosition + new Vector3(0, 0.4f, -0.2f);
-            foreach(Transform modelPart in stationModel.transform)
+            //create station model
+            stationModelPodest = GameObject.Instantiate((GameObject)Resources.Load("ModelPrep"), model.transform);
+            stationModelPodest.name = "Podest";
+            stationModelPodest.transform.localPosition = stationModelPedestalOffset;
+            stationModelPodest.transform.localScale = Vector3.Scale(stationModelPodest.transform.localScale, scale);
+
+            stationModel = GameObject.Instantiate((GameObject)Resources.Load("Cyclev2"), model.transform);
+            stationModel.transform.localScale = Vector3.Scale(stationModel.transform.localScale, scale);
+            stationModel.transform.localPosition = stationModel.transform.localPosition + stationModelModelOffset;
+            stationModel.GetComponent<ProductAssemblyController>().AddProductAssemblyColliders();
+            foreach (Transform modelPart in stationModel.transform)
             {
                 modelPart.gameObject.SetActive(false);
             }
-            foreach(Part part in station.PartList)
+            foreach (Part part in station.PartList)
             {
                 Transform partObject = stationModel.transform.GetChild(part.PartID);
                 partObject.gameObject.SetActive(true);
                 modelObjects.Add(partObject.gameObject);
             }
-            //TODO enable and color parts of previous stations and color them differently
+
+            // enable parts of previous stations and color them distinctly
+            foreach (Part part in station.GetPreviousStationsParts())
+            {
+                Transform partObject = stationModel.transform.GetChild(part.PartID);
+                partObject.gameObject.SetActive(true);
+                Utils.SetObjectColor(partObject, partPreviousStationColor);
+            }
 
             //place StationScreen
-
+            /*
+            GameObject stationScreen = GameObject.Instantiate((GameObject)Resources.Load("StationScreen"), tmpStation.transform);
+            stationScreen.transform.localPosition = stationScreenOffset;
+            stationScreen.GetComponent<StationScreenController>().SetPartList(modelObjects);
+            */
             //place parts on Tables
             PartsOnTable(tmpStation);
             numberOfStations++;
@@ -82,11 +105,16 @@ public class StationFactory
 
             GameObject tmpGameObject = GameObject.Instantiate(modelObjects[i], station.transform.position + (i + 1) * new Vector3(1, 0, 0) + new Vector3(-0.75f, 1f, 0.75f), Quaternion.Euler(0, 0, 90));
 
+            Utils.SetObjectMaterial(tmpGameObject.transform, materialOpaque);
+            GameObject.Destroy(tmpGameObject.GetComponent<ProductAssemblyCollider>());
             tmpGameObject.transform.parent = station.transform;
             tmpGameObject.AddComponent<Rigidbody>();
             tmpGameObject.GetComponent<Rigidbody>().useGravity = true;
             tmpGameObject.GetComponent<Rigidbody>().isKinematic = true;
-            tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
+            foreach (MeshCollider collider in tmpGameObject.GetComponents<MeshCollider>())
+            {
+                collider.isTrigger = false;
+            }
 
 
             //GameObject tmpGameObject = Instantiate(modelObjects[i], position + (i+1) * new Vector3(0.5f, 0, 0) + new Vector3(0.5f, 0, 2.5f), Quaternion.Euler(0, 90, 0));
