@@ -47,4 +47,45 @@ public class SaveLoadManager : MonoBehaviour
         }
     }
 
+    /// Load data using a string fileName
+    public static T Load<T>(string fileName)
+    {
+        // Set the path to the persistent data path (works on most devices by default)
+        string path = Application.persistentDataPath + "/saves/";
+        // Grab an instance of the BinaryFormatter that will handle serializing our data
+        // BinaryFormatter formatter = new BinaryFormatter();
+
+        // Using xml serializer
+        var serializer = new XmlSerializer(typeof(T));
+
+        // Open up a filestream, combining the path and fileName
+        FileStream fileStream = new FileStream(path + fileName + ".xml", FileMode.Open);
+        // Initialize a variable with the default value of whatever type we're using
+        T returnData = default(T);
+        /* 
+         * Try/Catch/Finally block that will attempt to deserialize the data
+         * If we fail to successfully deserialize the data, we'll just return the default value for Type
+         */
+        try
+        {
+            // returnValue = (T)formatter.Deserialize(fileStream);
+
+            returnData = (T)serializer.Deserialize(fileStream);
+        }
+        catch (SerializationException exception)
+        {
+            Debug.Log("Load failed. Error: " + exception.Message);
+        }
+        finally
+        {
+            fileStream.Close();
+        }
+        foreach (GameObject g in returnData as GameObject[])
+        {
+            Instantiate(g);
+        }
+        return returnData;
+    }
+
+
 }
