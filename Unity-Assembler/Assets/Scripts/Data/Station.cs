@@ -14,6 +14,8 @@ public class Station
     {
         this.PartList = partList;
         this.PreviousStations = previousStations;
+        Position = Vector3.zero;
+        Rotation = new Quaternion();
     }
 
     public Station(List<Part> partList, Station previousStation)
@@ -23,12 +25,16 @@ public class Station
         {
             previousStation
         };
+        Position = Vector3.zero;
+        Rotation = new Quaternion();
     }
 
     public Station(List<Part> partList)
     {
         this.PartList = partList;
         PreviousStations = null;
+        Position = Vector3.zero;
+        Rotation = new Quaternion();
     }
 
     public bool AddPart(Part part)
