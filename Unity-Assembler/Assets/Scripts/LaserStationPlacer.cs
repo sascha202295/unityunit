@@ -9,6 +9,8 @@ public class LaserStationPlacer : MonoBehaviour
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Behaviour_Pose controllerPose;
     public SteamVR_Action_Boolean mPlaceStationAction;
+    public SteamVR_Action_Boolean mRotateStationRight;
+    public SteamVR_Action_Boolean mRotateStationLeft;
     public VR_UIPointer mUIPointer;
     private bool enableStationPlacement = false;
 
@@ -16,11 +18,11 @@ public class LaserStationPlacer : MonoBehaviour
     private GameObject laser;
     private Transform laserTransform;
 
-    GameObject stationPreview;
     public Vector3 teleportReticleOffset;
     public LayerMask StationPlacementMask;
 
-    private List<GameObject> parts = null;
+    private GameObject stationPreview;
+    private Station station;
 
     // Start is called before the first frame update
     void Start()
@@ -42,14 +44,15 @@ public class LaserStationPlacer : MonoBehaviour
                 ShowLaser(hit);
                 stationPreview.SetActive(true);
                 stationPreview.transform.position = hit.point + teleportReticleOffset;
-              //rotate station 
-              /*  if leftbuttonpressed() {
+                //rotate station 
+                if (mRotateStationRight.GetStateDown(mTargetSource))
+                {
                     stationPreview.transform.Rotate(0, 5f, 0);
                 }
-                else rightbuttonpressed() {
+                else if (mRotateStationLeft.GetStateDown(mTargetSource)) 
+                {
                     stationPreview.transform.Rotate(0, -5f, 0);
                 }
-               */ 
             }
             else
             {
@@ -64,18 +67,12 @@ public class LaserStationPlacer : MonoBehaviour
         }
     }
 
-    public void EnableStationPlacer(List<GameObject> selectedParts)
+    public void EnableStationPlacer(Station station)
     {
         enableStationPlacement = true;
-        parts = new List<GameObject>();
-        foreach (GameObject part in selectedParts)
-        {
-            GameObject tmp = Instantiate(part);
-            tmp.transform.position = tmp.transform.position + new Vector3(0f, -50f, 0f);
-            parts.Add(tmp);
-        }
-        StationFactory station = new StationFactory();
-        stationPreview = station.CreateStation(Vector3.zero, parts);
+        StationFactory stationFactory = new StationFactory();
+        stationPreview = stationFactory.CreateStation(station);
+        this.station = station;
         stationPreview.SetActive(false);
     }
 
