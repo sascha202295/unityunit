@@ -42,6 +42,14 @@ public class LaserStationPlacer : MonoBehaviour
                 ShowLaser(hit);
                 stationPreview.SetActive(true);
                 stationPreview.transform.position = hit.point + teleportReticleOffset;
+              //rotate station 
+              /*  if leftbuttonpressed() {
+                    stationPreview.transform.Rotate(0, 5f, 0);
+                }
+                else rightbuttonpressed() {
+                    stationPreview.transform.Rotate(0, -5f, 0);
+                }
+               */ 
             }
             else
             {

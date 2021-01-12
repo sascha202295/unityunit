@@ -44,30 +44,7 @@ public class StationFactory
             stations.Add(station);
             numberOfStations++;
 
-            //rotate station on creation
-            /* 1st while loop- wait until the pressed button is released ,2nd while loop rotate station using left and right controllers and press button to terminate
-
-                  while (true)
-                  {
-                      if (mPlaceStationAction.GetStateUp(mTargetSource))
-                       break;
-
-                  }
-
-                  while (true)
-                  {    
-
-                              if left() {
-                                  station.transform.Rotate(0, 5f, 0);
-                              }
-                              else right() {
-                                  station.transform.Rotate(0, -5f, 0);
-                              }
-                              if (mPlaceStationAction.GetStateDown(mTargetSource)) { 
-                                  break;
-                              }
-                  }
-            */
+            
         }
         else
         {
