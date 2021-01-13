@@ -62,7 +62,7 @@ public class PreviousStationController : MonoBehaviour
 
         foreach (Station station in stationList)
         {
-            if (station.Name == tmp)
+            if (station.Name.Equals(tmp))
             {
                 if (chosenStations.Contains(station))
                 {
@@ -80,12 +80,13 @@ public class PreviousStationController : MonoBehaviour
         }
     }
 
-    public void DeleteChoosenStations()
+    public void DeleteChosenStations()
     {
         chosenStations = new List<Station>();
+        UpdateScrollView();
     }
 
-    public void ToogleSelection()
+    public void ToggleSelection()
     {
         selectionConfirmed = !selectionConfirmed;
     }

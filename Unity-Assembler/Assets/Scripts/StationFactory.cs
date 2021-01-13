@@ -40,6 +40,8 @@ public class StationFactory
             tmpStation = new GameObject("Station" + numberOfStations);
             tmpStation.transform.position = station.Position;
 
+            station.Name = "Station" + numberOfStations;
+
             GameObject model = new GameObject();
             model.transform.name = tmpStation.name + " - Model";
             model.transform.parent = tmpStation.transform;

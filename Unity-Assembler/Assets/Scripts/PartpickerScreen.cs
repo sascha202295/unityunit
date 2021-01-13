@@ -13,7 +13,6 @@ public class PartpickerScreen : MonoBehaviour
     public GameObject mListItem;
     public PreviousStationController previousStationController;
     public StationManager stationManager;
-    public PreviousStationController PreviousStationController;
 
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Action_Boolean mClickAction;
@@ -25,6 +24,7 @@ public class PartpickerScreen : MonoBehaviour
     {
         materialTransparent = (Material)Resources.Load("CycleTransparent");
         GetComponentInChildren<Canvas>().worldCamera = mUiPointer.GetComponent<Camera>();
+        mUiPointer.GetComponent<VR_UIPointer>().enablePartpicker = true;
     }
 
     public void AddNewItemToList(Part part)
@@ -99,6 +99,8 @@ public class PartpickerScreen : MonoBehaviour
         }
         pickedpartsList = null;
         stationManager.AddStation(station);
+        previousStationController.SetStationList(stationManager.Stations);
+        previousStationController.DeleteChosenStations();
         UpdateScrollView();
         // disable partpicker functionality
         /* 

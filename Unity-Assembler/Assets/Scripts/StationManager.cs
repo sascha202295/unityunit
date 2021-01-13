@@ -11,7 +11,7 @@ public class StationManager : MonoBehaviour
 
     public GameObject PartPickerModel;
 
-    private List<Station> Stations;
+    public List<Station> Stations { get; private set; }
 
     void Awake()
     {

@@ -5,7 +5,7 @@ using Valve.Newtonsoft.Json;
 
 public class Station
 {
-    public string Name { get; }
+    public string Name { get; set; }
     public List<Part> PartList { get; }
     public List<Station> PreviousStations { get; }
     public Vector3 Position { get; set; }
