@@ -13,6 +13,7 @@ public class PartpickerScreen : MonoBehaviour
     public GameObject mListItem;
     public PreviousStationController previousStationController;
     public StationManager stationManager;
+    public PreviousStationController PreviousStationController;
 
     public SteamVR_Input_Sources mTargetSource;
     public SteamVR_Action_Boolean mClickAction;
@@ -83,7 +84,6 @@ public class PartpickerScreen : MonoBehaviour
     public void CreateStation()
     {
         //if (previousStationController.IsSelectionConfirmed())
-
         GameObject partPickerModel = transform.parent.GetComponent<StationManager>().PartPickerModel;
 
         Station station = new Station(pickedpartsList, previousStationController.GetChosenStations());

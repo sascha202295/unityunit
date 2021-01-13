@@ -13,7 +13,7 @@ public class StationManager : MonoBehaviour
 
     private List<Station> Stations;
 
-    void Start()
+    void Awake()
     {
         // Instantiate PartPickerModel, position and scale it
         PartPickerModel = Instantiate((GameObject)Resources.Load("Cyclev2"), transform);

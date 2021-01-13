@@ -64,6 +64,20 @@ public class Station
         return tmpParts;
     }
 
+    public void PartPlaced(Part part)
+    {
+        part.IsPlaced = true;
+        PartList.Remove(part);
+        for(int i = 0; i < PartList.Count; i++)
+        {
+            if (!PartList[i].IsPlaced)
+            {
+                PartList.Insert(i, part);
+                return;
+            }
+        }
+        PartList.Add(part);
+    }
 
 
     public struct StationData

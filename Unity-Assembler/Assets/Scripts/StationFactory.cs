@@ -12,7 +12,7 @@ public class StationFactory
     private Vector3 stationModelOffset = new Vector3(-1.25f, 0, -0.75f);
     private Vector3 stationModelPedestalOffset = new Vector3(0, 0.06f, 0);
     private Vector3 stationModelModelOffset = new Vector3(0, 0.25f, -0.8f);
-    private Vector3 stationScreenOffset = new Vector3(-2.0f, 0.0f, 1.0f);
+    private Vector3 stationScreenOffset = new Vector3(0.7f, 0.6f, -3.0f);
     private Vector3 scale = new Vector3(1.5f, 1.5f, 1.5f);
 
     private Color partPreviousStationColor = new Color(0.1f, 0.1f, 0.1f, 0.05f);
@@ -75,11 +75,17 @@ public class StationFactory
             }
 
             //place StationScreen
-            /*
             GameObject stationScreen = GameObject.Instantiate((GameObject)Resources.Load("StationScreen"), tmpStation.transform);
             stationScreen.transform.localPosition = stationScreenOffset;
-            stationScreen.GetComponent<StationScreenController>().SetPartList(modelObjects);
-            */
+            StationScreenController tmp = stationScreen.GetComponent<StationScreenController>();
+            tmp.mUIPointer = ui_Pointer;
+            tmp.mItemSpawnScale = scale;
+            tmp.mItemSpawnMaterial = materialOpaque;
+            tmp.mItemBuildMaterial = materialTransparent;
+            tmp.station = station;
+            tmp.stationModel = stationModel;
+
+
             //place parts on Tables
             PartsOnTable(tmpStation);
             numberOfStations++;

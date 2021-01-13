@@ -12,7 +12,7 @@ public class PreviousStationController : MonoBehaviour
     public Quaternion mItemSpawnRotation;
 
     private List<Station> stationList;
-    private List<Station> choosenStations = new List<Station>();
+    private List<Station> chosenStations = new List<Station>();
     private bool selectionConfirmed = false;
 
     // Start is called before the first frame update
@@ -48,7 +48,7 @@ public class PreviousStationController : MonoBehaviour
                 GameObject spawnedItem = Instantiate(mListItem, mListItemSpawnpoint.transform, false);
                 spawnedItem.GetComponentInChildren<Text>().text = station.Name;
                 spawnedItem.GetComponent<Button>().onClick.AddListener(() => this.ItemClicked(spawnedItem));
-                if(choosenStations.Contains(station))
+                if(chosenStations.Contains(station))
                 {
                     spawnedItem.GetComponent<Button>().GetComponent<Image>().color = Color.green;
                 }
@@ -64,15 +64,15 @@ public class PreviousStationController : MonoBehaviour
         {
             if (station.Name == tmp)
             {
-                if (choosenStations.Contains(station))
+                if (chosenStations.Contains(station))
                 {
-                    choosenStations.Remove(station);
+                    chosenStations.Remove(station);
                     UpdateScrollView();
                     return;
                 }
                 else
                 {
-                    choosenStations.Add(station);
+                    chosenStations.Add(station);
                     UpdateScrollView();
                     return;
                 }
@@ -82,7 +82,7 @@ public class PreviousStationController : MonoBehaviour
 
     public void DeleteChoosenStations()
     {
-        choosenStations = new List<Station>();
+        chosenStations = new List<Station>();
     }
 
     public void ToogleSelection()
@@ -97,6 +97,6 @@ public class PreviousStationController : MonoBehaviour
 
     public List<Station> GetChosenStations()
     {
-        return choosenStations;
+        return chosenStations;
     }
 }

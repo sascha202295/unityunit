@@ -9,13 +9,14 @@ public class ProductAssemblyCollider : MonoBehaviour
     public SteamVR_Action_Boolean mGrabAction;
 
     private GameObject collidingObject = null;
-
+    private StationScreenController StationScreenController;
     private Material placedPartMaterial;
 
     // Start is called before the first frame update
     void Start()
     {
         placedPartMaterial = (Material) Resources.Load("CycleWhite");
+        StationScreenController = transform.root.Find("StationScreen(Clone)").GetComponent<StationScreenController>();
     }
 
     void Update()
@@ -36,6 +37,7 @@ public class ProductAssemblyCollider : MonoBehaviour
         Utils.SetObjectColor(transform, new Color(1f, 1f, 1f, 1.0f));
         Destroy(collidingObject);
         collidingObject = null;
+        StationScreenController.PartPlaced(Part.Parts[transform.GetSiblingIndex()]);
     }
 
     private void SetCollidingObject(Collider col)

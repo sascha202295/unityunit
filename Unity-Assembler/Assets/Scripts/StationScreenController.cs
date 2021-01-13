@@ -8,26 +8,31 @@ public class StationScreenController : MonoBehaviour
     public GameObject mListItemSpawnpoint;
     public GameObject mListItem;
     public GameObject mUIPointer;
-    public Vector3 mItemSpawnpoint;
-    public Quaternion mItemSpawnRotation;
+    public GameObject stationModel;
+    public Station station;
+    public Material mItemSpawnMaterial;
+    public Material mItemBuildMaterial;
+    public Vector3 mItemSpawnScale;
 
-    private List<GameObject> partList;
+    private Vector3 mItemSpawnpoint = new Vector3(4.0f, 0.3f, -3.0f);
+    private Vector3 mItemSpawnRotation = new Vector3(0, -90.0f, 0);
+
+    private GameObject partHolder;
+
+    private List<Part> partList;
 
     // Start is called before the first frame update
     void Start()
     {
-        /*
-        partList = new List<GameObject>();
-        partList.Add(Instantiate((GameObject) Resources.Load("Pref_Station_Small"), new Vector3(0,-10f,0), mItemSpawnRotation));
-        UpdateScrollView();
-        */
         GetComponentInChildren<Canvas>().worldCamera = mUIPointer.GetComponent<Camera>();
-    }
-
-    public void SetPartList(List<GameObject> partList)
-    {
-        this.partList = partList;
+        partList = new List<Part>(station.PartList);
         UpdateScrollView();
+
+        // create parent object for parts, to make deletion of spawned parts easier
+        partHolder = new GameObject();
+        partHolder.name = "partHolder";
+        partHolder.transform.parent = transform.parent;
+        partHolder.transform.position = transform.root.position;
     }
 
     private void UpdateScrollView()
@@ -40,11 +45,11 @@ public class StationScreenController : MonoBehaviour
         // populate list if there are any
         if (partList != null)
         {
-            foreach (GameObject part in partList)
+            foreach (Part part in partList)
             {
                 //instantiate item ans set parent
                 GameObject spawnedItem = Instantiate(mListItem, mListItemSpawnpoint.transform, false);
-                spawnedItem.GetComponentInChildren<Text>().text = part.name.Replace("(clone)", "");
+                spawnedItem.GetComponentInChildren<Text>().text = part.Name;
                 spawnedItem.GetComponent<Button>().onClick.AddListener(() => this.ItemClicked(spawnedItem));
             }
         }
@@ -54,15 +59,56 @@ public class StationScreenController : MonoBehaviour
     {
         string tmp = button.GetComponentInChildren<Text>().text;
 
-        foreach (GameObject part in partList)
+        foreach (Part part in partList)
         {
-            if(part.name == tmp)
+            if (part.Name.Equals(tmp))
             {
-                Instantiate(part, mItemSpawnpoint, mItemSpawnRotation, transform.root);
+                //spawn and position part
+                GameObject tmpPart = Instantiate(stationModel.transform.GetChild(part.PartID).gameObject, partHolder.transform);
+                tmpPart.transform.localScale = Vector3.Scale(tmpPart.transform.localScale, mItemSpawnScale);
+                tmpPart.transform.localPosition = mItemSpawnpoint;
+                // Apply rotation
+                Quaternion tmpQuat = tmpPart.transform.localRotation;
+                tmpQuat.eulerAngles = mItemSpawnRotation;
+                tmpPart.transform.localRotation = tmpQuat;
+                //add rigidbody and set meshcollider variables
+                Rigidbody tmpRig = tmpPart.AddComponent<Rigidbody>();
+                tmpRig.useGravity = true;
+                tmpRig.isKinematic = true;
+                foreach (MeshCollider col in tmpPart.GetComponents<MeshCollider>())
+                {
+                    col.isTrigger = false;
+                }
+                // set material
+                Utils.SetObjectMaterial(tmpPart.transform, mItemSpawnMaterial);
+                // destroy ProductAssemblyCollider, as it is not needed
+                Destroy(tmpPart.GetComponent<ProductAssemblyCollider>());
+
                 partList.Remove(part);
+
                 UpdateScrollView();
                 return;
             }
+        }
+    }
+
+    public void PartPlaced(Part part)
+    {
+        station.PartPlaced(part);
+    }
+
+    public void ResetStation()
+    {
+        partList = new List<Part>(station.PartList);
+        foreach (Part part in partList)
+        {
+            Utils.SetObjectMaterial(stationModel.transform.GetChild(part.PartID), mItemBuildMaterial);
+            part.IsPlaced = false;
+        }
+        UpdateScrollView();
+        foreach(Transform part in partHolder.transform)
+        {
+            Destroy(part.gameObject);
         }
     }
 }

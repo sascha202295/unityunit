@@ -63,6 +63,8 @@ public class LaserStationPlacer : MonoBehaviour
             {
                 enableStationPlacement = false;
                 laser.SetActive(false);
+                station.Position = stationPreview.transform.position;
+                station.Rotation = stationPreview.transform.rotation;
             }
         }
     }
