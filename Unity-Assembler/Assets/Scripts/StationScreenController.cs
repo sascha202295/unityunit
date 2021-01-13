@@ -79,6 +79,8 @@ public class StationScreenController : MonoBehaviour
                 {
                     col.isTrigger = false;
                 }
+                // extra capsule collider needed as meshcolliders of smaller parts are unreliable
+                tmpPart.AddComponent<CapsuleCollider>().isTrigger = true;
                 // set material
                 Utils.SetObjectMaterial(tmpPart.transform, mItemSpawnMaterial);
                 // destroy ProductAssemblyCollider, as it is not needed

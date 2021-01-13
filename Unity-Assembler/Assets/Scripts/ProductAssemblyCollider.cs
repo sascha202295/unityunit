@@ -34,7 +34,7 @@ public class ProductAssemblyCollider : MonoBehaviour
     private void PlaceObject()
     {
         Utils.SetObjectMaterial(transform, placedPartMaterial);
-        Utils.SetObjectColor(transform, new Color(1f, 1f, 1f, 1.0f));
+        Utils.SetObjectColor(transform, new Color(0.2f, 0.2f, 0.2f, 1.0f));
         Destroy(collidingObject);
         collidingObject = null;
         StationScreenController.PartPlaced(Part.Parts[transform.GetSiblingIndex()]);
@@ -42,37 +42,43 @@ public class ProductAssemblyCollider : MonoBehaviour
 
     private void SetCollidingObject(Collider col)
     {
-        if (collidingObject || !col.GetComponent<Rigidbody>())
+        if (collidingObject != null || !col.GetComponent<Rigidbody>())
         {
+            Debug.LogWarning("skipping as collidingObject: " + col.transform.name.Replace("(Clone)", ""));
             return;
         }
         //check if part names match, filtering the unity added "(Clone)"
-        else if (col.transform.name.Replace("(Clone)", "").Equals(transform.name.Replace("(Clone)", "")))
+        else if (col.transform.name.Replace("(Clone)", "").Equals(transform.name))
         {
+            Debug.LogWarning("adding as collidingObject: " + col.transform.name);
             collidingObject = col.gameObject;
 
             // set Color to green
             Utils.SetObjectColor(transform, new Color(0f, 1f, 0f, 0.4f));
         }
-        
+        Debug.LogWarning("nothing? as collidingObject: cropped " + col.transform.name.Replace("(Clone)", "") + " uncropped " + col.transform.name + " partname " + transform.name);
+
     }
 
     public void OnTriggerEnter(Collider other)
     {
+        Debug.LogWarning("col enter: " + other.transform.name);
         SetCollidingObject(other);
     }
 
     public void OnTriggerStay(Collider other)
     {
+        Debug.LogWarning("col stay: " + other.transform.name);
         SetCollidingObject(other);
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (!collidingObject)
+        if (collidingObject != other.gameObject)
         {
             return;
         }
+        Debug.LogWarning("removing as collidingObject: " + other.transform.name);
 
         collidingObject = null;
 

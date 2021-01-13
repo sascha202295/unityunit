@@ -14,7 +14,7 @@ public class ControllerGrabObject : MonoBehaviour
 
     private void SetCollidingObject(Collider col)
     {
-        if (collidingObject || !col.GetComponent<Rigidbody>())
+        if (collidingObject != null || !col.GetComponent<Rigidbody>())
         {
             return;
         }
@@ -33,11 +33,10 @@ public class ControllerGrabObject : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (!collidingObject)
+        if (collidingObject == other.gameObject)
         {
             return;
         }
-
         collidingObject = null;
     }
 
