@@ -47,7 +47,12 @@ public class StationScreenController : MonoBehaviour
         {
             foreach (Part part in partList)
             {
-                //instantiate item ans set parent
+                // do not create Listitems for already placed parts
+                if (part.IsPlaced)
+                {
+                    continue;
+                }
+                //instantiate item and set parent
                 GameObject spawnedItem = Instantiate(mListItem, mListItemSpawnpoint.transform, false);
                 spawnedItem.GetComponentInChildren<Text>().text = part.Name;
                 spawnedItem.GetComponent<Button>().onClick.AddListener(() => this.ItemClicked(spawnedItem));

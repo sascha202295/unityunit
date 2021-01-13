@@ -95,29 +95,12 @@ public class PartpickerScreen : MonoBehaviour
         {
             Utils.SetObjectMaterial(partPickerModel.transform.GetChild(part.PartID), materialTransparent);
             Utils.SetObjectColor(partPickerModel.transform.GetChild(part.PartID), new Color(0f, 1f, 0f, 0.1f));
-            RemoveAllMeshColliders(partPickerModel.transform.GetChild(part.PartID));
+            Utils.RemoveAllMeshColliders(partPickerModel.transform.GetChild(part.PartID));
         }
         pickedpartsList = null;
         stationManager.AddStation(station);
         previousStationController.SetStationList(stationManager.Stations);
         previousStationController.DeleteChosenStations();
         UpdateScrollView();
-        // disable partpicker functionality
-        /* 
-        VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
-        tmpUiPointer.enablePartpicker = false;
-        Toggle tmpTogglePartpicker = (Toggle) transform.Find("Toggle_Partpicker").GetComponent("Toggle");
-        tmpTogglePartpicker.isOn = false;
-        */
-
-    }
-
-    public static void RemoveAllMeshColliders(Transform transform)
-    {
-        MeshCollider[] colliders = transform.GetComponents<MeshCollider>();
-        foreach (MeshCollider collider in colliders)
-        {
-            Destroy(collider);
-        }
     }
 }

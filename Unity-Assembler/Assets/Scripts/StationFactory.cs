@@ -18,7 +18,7 @@ public class StationFactory
     private Color partPreviousStationColor = new Color(0.1f, 0.1f, 0.1f, 0.05f);
 
     private static int numberOfStations = 0;
-    private const int maxNumberOfStations = 50;
+    private const int maxNumberOfStations = 1000;
 
     private GameObject tmpStation;
     private GameObject stationModelPodest;
@@ -63,9 +63,15 @@ public class StationFactory
             }
             foreach (Part part in station.PartList)
             {
+                Debug.LogWarning("stmodPC: " + stationModel.transform.childCount + " partID: " + part.PartID);
                 Transform partObject = stationModel.transform.GetChild(part.PartID);
                 partObject.gameObject.SetActive(true);
                 modelObjects.Add(partObject.gameObject);
+                if (part.IsPlaced)
+                {
+                    Utils.SetObjectMaterial(partObject, materialOpaque);
+                    Utils.SetObjectColor(partObject, new Color(0.2f, 0.2f, 0.2f, 1.0f));
+                }
             }
 
             // enable parts of previous stations and color them distinctly
@@ -87,9 +93,9 @@ public class StationFactory
             tmp.station = station;
             tmp.stationModel = stationModel;
 
-
             //place parts on Tables
-            PartsOnTable(tmpStation);
+            //PartsOnTable(tmpStation);
+
             numberOfStations++;
         }
         else
@@ -123,15 +129,6 @@ public class StationFactory
             {
                 collider.isTrigger = false;
             }
-
-
-            //GameObject tmpGameObject = Instantiate(modelObjects[i], position + (i+1) * new Vector3(0.5f, 0, 0) + new Vector3(0.5f, 0, 2.5f), Quaternion.Euler(0, 90, 0));
-            //tmpGameObject.transform.parent = station.transform;
-            //tmpGameObject.AddComponent<Rigidbody>();
-            //tmpGameObject.GetComponent<Rigidbody>().useGravity = true;
-            //tmpGameObject.GetComponent<Rigidbody>().isKinematic = false;
-            //tmpGameObject.GetComponent<MeshCollider>().isTrigger = false;
-
         }
     }
 }

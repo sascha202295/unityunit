@@ -44,31 +44,26 @@ public class ProductAssemblyCollider : MonoBehaviour
     {
         if (collidingObject != null || !col.GetComponent<Rigidbody>())
         {
-            Debug.LogWarning("skipping as collidingObject: " + col.transform.name.Replace("(Clone)", ""));
             return;
         }
         //check if part names match, filtering the unity added "(Clone)"
         else if (col.transform.name.Replace("(Clone)", "").Equals(transform.name))
         {
-            Debug.LogWarning("adding as collidingObject: " + col.transform.name);
             collidingObject = col.gameObject;
 
             // set Color to green
             Utils.SetObjectColor(transform, new Color(0f, 1f, 0f, 0.4f));
         }
-        Debug.LogWarning("nothing? as collidingObject: cropped " + col.transform.name.Replace("(Clone)", "") + " uncropped " + col.transform.name + " partname " + transform.name);
 
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.LogWarning("col enter: " + other.transform.name);
         SetCollidingObject(other);
     }
 
     public void OnTriggerStay(Collider other)
     {
-        Debug.LogWarning("col stay: " + other.transform.name);
         SetCollidingObject(other);
     }
 
@@ -78,7 +73,6 @@ public class ProductAssemblyCollider : MonoBehaviour
         {
             return;
         }
-        Debug.LogWarning("removing as collidingObject: " + other.transform.name);
 
         collidingObject = null;
 

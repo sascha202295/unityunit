@@ -7,24 +7,10 @@ public class PreviousStationController : MonoBehaviour
 {
     public GameObject mListItemSpawnpoint;
     public GameObject mListItem;
-    public GameObject mUIPointer;
-    public Vector3 mItemSpawnpoint;
-    public Quaternion mItemSpawnRotation;
 
     private List<Station> stationList;
     private List<Station> chosenStations = new List<Station>();
     private bool selectionConfirmed = false;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        /*
-        partList = new List<GameObject>();
-        partList.Add(Instantiate((GameObject) Resources.Load("Pref_Station_Small"), new Vector3(0,-10f,0), mItemSpawnRotation));
-        UpdateScrollView();
-        */
-        GetComponentInChildren<Canvas>().worldCamera = mUIPointer.GetComponent<Camera>();
-    }
 
     public void SetStationList(List<Station> stationList)
     {
