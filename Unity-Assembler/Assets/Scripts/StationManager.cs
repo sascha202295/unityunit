@@ -46,18 +46,15 @@ public class StationManager : MonoBehaviour
     public void Save()
     {
 
-        List<string[]> stationJson = new List<string[]>();
-        foreach (var station in Stations) {
-
-            stationJson.Add(station.stationSerializer());
-        }
-       string json = SaveLoadManager.stationArraysJson(stationJson);
-        SaveLoadManager.SaveToFile(json, "test");
+      string json =  Station2Json.stationSerializer(this.Stations);
+        string fileName = "test";
+        SaveLoadManager.SaveToFile(json, fileName);
     }
 
     public void Load()
     {
-        // TODO
+        string fileName = "test";
+        this.Stations = Station2Json.stationDeserializer(fileName);
     }
 
 

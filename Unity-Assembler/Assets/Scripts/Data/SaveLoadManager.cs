@@ -19,8 +19,14 @@ public class SaveLoadManager : MonoBehaviour
     /// 
     private void Start()
     {
-        
-        /*
+
+
+        //////   ******* Test ******///
+     
+     
+      
+        // create list of stations
+
         List<Station> Stations = new List<Station>();
 
         List<Part> parts = new List<Part>();
@@ -32,40 +38,40 @@ public class SaveLoadManager : MonoBehaviour
         List<Station> stations = new List<Station>();
 
         stations.Add(new Station(parts, stations0));
+
+
         Station station = new Station(parts, stations);
         station.Position = new Vector3(1, 2, 3);
         station.Rotation = new Quaternion();
         station.Name = "station0";
+        
+        Station station1 = new Station(parts, stations);
+        station1.Position = new Vector3(1, 2, 3);
+        station1.Rotation = new Quaternion();
+        station1.Name = "station1";
+
+
         Stations.Add(station);
+        Stations.Add(station1);
         station.PreviousStations.Add(station);
-        List<string[]> stationJson = new List<string[]>();
-        foreach (Station station_ in Stations)
-        {
 
-            stationJson.Add(station_.stationSerializer());
-        }
-        string json = SaveLoadManager.stationArraysJson(stationJson);
+        
+         //  stationSerializer
+
+        string json = Station2Json.stationSerializer(Stations);
+
         SaveLoadManager.SaveToFile(json, "test");
+
+
+        //  stationDeserializer
+
+        List<Station> stations1=  Station2Json.stationDeserializer("test");
+
+        foreach (var gg in stations1) {
+            Debug.Log("stations1:" + gg.Name);
+
+        }
         
-        */
-        
-
-
-        /*
-        Station tetStation = new Station(parts);
-        
-    
-     
-
-        string[] output = station.stationSerializer();
-        List<string[]> stationsString = new List<string[]>();
-        stationsString.Add(output);
-        stationsString.Add(output);
-        SaveToFile(stationArraysJson(stationsString), "test");
-
-
-        Debug.Log(output);
-        */
 
     }
     private void Update()
@@ -169,7 +175,7 @@ public class SaveLoadManager : MonoBehaviour
         return default(T);
     }
 
-
+    /*
     public static String stationArraysJson(List<string[]> stationArray)
     {
         String json = "[";
@@ -182,7 +188,7 @@ public class SaveLoadManager : MonoBehaviour
         return json;
     }
 
-
+    */
 
 
 }
