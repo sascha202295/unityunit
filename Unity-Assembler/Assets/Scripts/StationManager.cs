@@ -33,6 +33,10 @@ public class StationManager : MonoBehaviour
         Part.Parts = partData;
 
         Stations = new List<Station>();
+
+        if (PlayerPrefs.GetString("fileName") !=null) {
+            Load(PlayerPrefs.GetString("fileName"));
+        }
     }
 
     public void AddStation(Station station)
@@ -51,9 +55,9 @@ public class StationManager : MonoBehaviour
         SaveLoadManager.SaveToFile(json, fileName);
     }
 
-    public void Load()
+    public void Load(string fileName)
     {
-        string fileName = "test";
+       // string fileName = "test";
         this.Stations = Station2Json.stationDeserializer(fileName);
     }
 
