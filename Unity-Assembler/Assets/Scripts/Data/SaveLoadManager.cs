@@ -19,24 +19,53 @@ public class SaveLoadManager : MonoBehaviour
     /// 
     private void Start()
     {
-
-
         
+        /*
+        List<Station> Stations = new List<Station>();
+
         List<Part> parts = new List<Part>();
+
         parts.Add(new Part("test1"));
-        List<Station> stations = null;
+
+        List<Station> stations0 = new List<Station>();
+        stations0.Add(new Station(parts));
+        List<Station> stations = new List<Station>();
+
+        stations.Add(new Station(parts, stations0));
         Station station = new Station(parts, stations);
         station.Position = new Vector3(1, 2, 3);
         station.Rotation = new Quaternion();
+        station.Name = "station0";
+        Stations.Add(station);
+        station.PreviousStations.Add(station);
+        List<string[]> stationJson = new List<string[]>();
+        foreach (Station station_ in Stations)
+        {
+
+            stationJson.Add(station_.stationSerializer());
+        }
+        string json = SaveLoadManager.stationArraysJson(stationJson);
+        SaveLoadManager.SaveToFile(json, "test");
+        
+        */
+        
 
 
-        string output = station.stationSerializer();
+        /*
+        Station tetStation = new Station(parts);
+        
+    
+     
 
-        SaveToFile(stationArraysJson(new String[] { output, output }), "test");
+        string[] output = station.stationSerializer();
+        List<string[]> stationsString = new List<string[]>();
+        stationsString.Add(output);
+        stationsString.Add(output);
+        SaveToFile(stationArraysJson(stationsString), "test");
 
 
         Debug.Log(output);
-
+        */
 
     }
     private void Update()
@@ -141,25 +170,19 @@ public class SaveLoadManager : MonoBehaviour
     }
 
 
-    public String stationArraysJson(String[] stationArray)
+    public static String stationArraysJson(List<string[]> stationArray)
     {
-        String json = "\"stations\": [\n ";
+        String json = "[";
         foreach (var stationJson in stationArray)
         {
-            json += "\n" + stationJson + ",";
+            json += "\n" + "\""+ stationJson[0]+ "\"" +": "+ stationJson[1] + ",";
 
         }
-        json += "]";
+        json += "\n]";
         return json;
     }
 
 
-    public class Account
-    {
-        public string Email { get; set; }
-        public bool Active { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public IList<string> Roles { get; set; }
-    }
+
 
 }

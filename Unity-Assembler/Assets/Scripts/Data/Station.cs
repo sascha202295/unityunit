@@ -7,7 +7,7 @@ public class Station
 {
     public string Name { get; set; }
     public List<Part> PartList { get; }
-    public List<Station> PreviousStations { get; }
+    public List<Station> PreviousStations { get; set; }
     public Vector3 Position { get; set; }
     public Quaternion Rotation { get; set; }
 
@@ -84,33 +84,59 @@ public class Station
     {
         public string Name { get; set; }
         public List<Part> PartList { get; set; }
-        public List<Station> PreviousStations { get; set; }
+        public List<string> PreviousStations { get; set; }
         public float[] Position;
         public float[] Rotation;
 
     }
 
-    public static Station stationDeserializer(string json)
+    public static Station stationDeserializer(string jsonStation, string jsonAllStations)
     {
 
-        StationData stationData = JsonConvert.DeserializeObject<StationData>(json);
-        Station station = new Station(stationData.PartList, stationData.PreviousStations);
+        StationData stationData = JsonConvert.DeserializeObject<StationData>(jsonStation);
+
+    
+
+        Station station = new Station(stationData.PartList);
+
+
         station.Position = new Vector3(stationData.Position[0], stationData.Position[1], stationData.Position[2]);
         station.Rotation = new Quaternion(stationData.Position[0], stationData.Position[1], stationData.Position[2], stationData.Position[3]);
+
+        try
+        {
+            List<Station> PreviousStations = new List<Station>();
+            foreach (var prefStatinon in stationData.PreviousStations)
+            {
+                PreviousStations.Add(Station.stationDeserializer(prefStatinon, jsonAllStations));
+            }
+            station.PreviousStations = PreviousStations;
+        } catch { }
         return station;
     }
-    public string stationSerializer()
+
+
+    public string[] stationSerializer()
     {
+        List<string> previousStationsNames = new List<string>();
+        foreach (var station in this.PreviousStations) {
+            if(station.Name!=null)
+            previousStationsNames.Add(station.Name);
+
+        }
+                
         StationData stationData = new StationData
         {
+
+
             Name = this.Name,
             PartList = this.PartList,
-            PreviousStations = this.PreviousStations,
+            PreviousStations = previousStationsNames,
             Position = new float[3] { this.Position.x, this.Position.y, this.Position.z },
             Rotation = new float[4] { this.Rotation.x, this.Rotation.y, this.Rotation.z, this.Rotation.w }
         };
 
-        return JsonConvert.SerializeObject(stationData, Formatting.Indented);
+        return new string[] { stationData.Name,JsonConvert.SerializeObject(stationData, Formatting.Indented) };
     }
 
 }
