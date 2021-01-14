@@ -42,6 +42,11 @@ public class StationManager : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        PlayerPrefs.DeleteKey("fileName");
+    }
+
     public void AddStation(Station station)
     {
         if (!Stations.Contains(station))

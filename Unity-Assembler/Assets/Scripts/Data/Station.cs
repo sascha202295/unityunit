@@ -33,7 +33,7 @@ public class Station
     public Station(List<Part> partList)
     {
         this.PartList = partList;
-        PreviousStations = null;
+        PreviousStations = new List<Station>();
         Position = Vector3.zero;
         Rotation = new Quaternion();
     }
@@ -56,10 +56,13 @@ public class Station
     public List<Part> GetPreviousStationsParts()
     {
         List<Part> tmpParts = new List<Part>();
-        foreach (Station prevStation in PreviousStations)
+        if (PreviousStations != null)
         {
-            tmpParts.AddRange(prevStation.PartList);
-            tmpParts.AddRange(prevStation.GetPreviousStationsParts());
+            foreach (Station prevStation in PreviousStations)
+            {
+                tmpParts.AddRange(prevStation.PartList);
+                tmpParts.AddRange(prevStation.GetPreviousStationsParts());
+            }
         }
         return tmpParts;
     }

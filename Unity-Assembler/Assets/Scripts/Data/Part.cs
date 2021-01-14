@@ -26,7 +26,7 @@ public class Part
     [JsonConstructor]
     public Part(string name, int partId)
     {
-
+        this.Name = name;
         this.PartID = partId;
     }
 
