@@ -11,61 +11,66 @@ public class SaveLoadManager : MonoBehaviour
     /// 
     private void Start()
     {
-        
-
-        //////   ******* Test ******///
-
-
-
-        // create list of stations
         /*
-        List<Station> Stations = new List<Station>();
 
-        List<Part> parts = new List<Part>();
+           //******* Test ******
 
-        parts.Add(new Part("test1"));
+           // create list of stations
 
-        List<Station> stations0 = new List<Station>();
-        stations0.Add(new Station(parts));
-        List<Station> stations = new List<Station>();
+           List<Station> Stations = new List<Station>();
 
-        stations.Add(new Station(parts, stations0));
+             List<Part> parts = new List<Part>();
+             Part part = new Part("test1");
+             Part part2 = new Part("test2");
+             parts.Add(part);
+             parts.Add(part2);
 
+             List<Station> stations0 = new List<Station>();
+             stations0.Add(new Station(parts));
+             List<Station> stations = new List<Station>();
 
-        Station station = new Station(parts, stations);
-        station.Position = new Vector3(1, 2, 3);
-        station.Rotation = new Quaternion();
-        station.Name = "station0";
-
-        Station station1 = new Station(parts, stations);
-        station1.Position = new Vector3(1, 2, 3);
-        station1.Rotation = new Quaternion();
-        station1.Name = "station1";
+             stations.Add(new Station(parts, stations0));
 
 
-        Stations.Add(station);
-        Stations.Add(station1);
-        station.PreviousStations.Add(station);
+             Station station = new Station(parts, stations);
+             station.Position = new Vector3(1, 2, 3);
+             station.Rotation = new Quaternion();
+             station.Name = "station0";
+
+             Station station1 = new Station(parts, stations);
+             station1.Position = new Vector3(1, 2, 3);
+             station1.Rotation = new Quaternion();
+             station1.Name = "station1";
 
 
-        //  stationSerializer
-
-        string json = Station2Json.stationSerializer(Stations);
-
-        SaveLoadManager.SaveToFile(json, "test");
+             Stations.Add(station);
+             Stations.Add(station1);
+             station.PreviousStations.Add(station);
 
 
-        //  stationDeserializer
+             //  stationSerializer
 
-        List<Station> stations1 = Station2Json.stationDeserializer("test");
+             string json = Station2Json.stationSerializer(Stations);
 
-        foreach (var gg in stations1)
-        {
-            Debug.Log("stations1:" + gg.Name);
+             SaveLoadManager.SaveToFile(json, "test");
 
-        }
+
+             //  stationDeserializer
+             string json1 = SaveLoadManager.LoadFromFile("test");
+             List<Station> stations1 = Station2Json.stationDeserializer(json1);
+
+             foreach (var gg in stations1)
+             {
+
+                 Debug.Log("stations1:" + gg.Name);
+
+                 foreach (var pt in gg.PartList)
+                     Debug.Log("Part-Name: " + pt.Name + "; Part-ID: "+ pt.PartID);
+
+             }
         */
     }
+
     private void Update()
     {
 
@@ -81,7 +86,7 @@ public class SaveLoadManager : MonoBehaviour
     }
 
     /// Load data using a string fileName
-    public static T Load<T>(string fileName)
+    public static String LoadFromFile(string fileName)
     {
         // Set the path to the persistent data path (works on most devices by default)
         string path = Application.persistentDataPath + "/saves/";
@@ -94,12 +99,12 @@ public class SaveLoadManager : MonoBehaviour
         /* 
          * Try/Catch/Finally block that will attempt to deserialize the data
          */
+        string contents = "";
         try
         {
             var sr = new StreamReader(fileStream);
-            string contents = sr.ReadToEnd();
-            T obj = JsonConvert.DeserializeObject<T>(contents);
-            return obj;
+            contents = sr.ReadToEnd();
+
         }
         catch (SerializationException exception)
         {
@@ -110,6 +115,6 @@ public class SaveLoadManager : MonoBehaviour
             fileStream.Close();
         }
 
-        return default(T);
+        return contents;
     }
 }

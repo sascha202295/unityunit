@@ -59,11 +59,12 @@ public class StationManager : MonoBehaviour
 
     public void Load(string fileName)
     {
-        this.Stations = Station2Json.stationDeserializer(fileName);
+        string json = SaveLoadManager.LoadFromFile(fileName);
+        this.Stations = Station2Json.stationDeserializer(json);
 
         StationFactory factory = new StationFactory();
 
-        foreach(Station station in Stations)
+        foreach (Station station in Stations)
         {
             // place stations in scene
             factory.CreateStation(station, mUIPointer);

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.Newtonsoft.Json;
 
 public class Part
 {
@@ -20,6 +21,16 @@ public class Part
         IsPlaced = false;
         partCount++;
     }
+
+
+    [JsonConstructor]
+    public Part(string name, int partId)
+    {
+
+        this.PartID = partId;
+    }
+
+
 
     public override bool Equals(object obj)
     {
