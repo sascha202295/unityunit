@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
-
+/// <summary>
+/// allows placement of stations
+/// </summary>
 public class LaserStationPlacer : MonoBehaviour
 {
     public SteamVR_Input_Sources mTargetSource;
@@ -19,13 +21,12 @@ public class LaserStationPlacer : MonoBehaviour
     private GameObject laser;
     private Transform laserTransform;
 
-    public Vector3 teleportReticleOffset;
+    public Vector3 stationReticleOffset;
     public LayerMask StationPlacementMask;
 
     private GameObject stationPreview;
     private Station station;
 
-    // Start is called before the first frame update
     void Start()
     {
         laser = Instantiate(laserPrefab);
@@ -33,7 +34,6 @@ public class LaserStationPlacer : MonoBehaviour
         laser.GetComponent<Renderer>().material.color = Color.green;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (enableStationPlacement)
@@ -44,22 +44,25 @@ public class LaserStationPlacer : MonoBehaviour
             {
                 ShowLaser(hit);
                 stationPreview.SetActive(true);
-                stationPreview.transform.position = hit.point + teleportReticleOffset;
-                //rotate station 
+                stationPreview.transform.position = hit.point + stationReticleOffset;
+
+                // allow rotation station 
                 if (mRotateStationRight.GetState(mTargetSource))
                 {
                     stationPreview.transform.Rotate(0, StationPlacementRotationSpeed, 0);
                 }
-                else if (mRotateStationLeft.GetState(mTargetSource)) 
+                else if (mRotateStationLeft.GetState(mTargetSource))
                 {
                     stationPreview.transform.Rotate(0, -StationPlacementRotationSpeed, 0);
                 }
             }
+            // if laser hits no valid surface, make is and the stationpreview invisible
             else
             {
                 laser.SetActive(false);
                 stationPreview.SetActive(false);
             }
+            // set stations final placement once placement-button has been pressed
             if (mPlaceStationAction.GetStateDown(mTargetSource))
             {
                 enableStationPlacement = false;
@@ -70,15 +73,25 @@ public class LaserStationPlacer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// enables the placement of a station
+    /// </summary>
+    /// <param name="station">station to be placed</param>
     public void EnableStationPlacer(Station station)
     {
         enableStationPlacement = true;
+        // create station
         StationFactory stationFactory = new StationFactory();
         stationPreview = stationFactory.CreateStation(station, mUIPointer);
         this.station = station;
+        // don't show station for now
         stationPreview.SetActive(false);
     }
 
+    /// <summary>
+    /// shows laser at given hitpoint
+    /// </summary>
+    /// <param name="hit">lasers hitpoint</param>
     private void ShowLaser(RaycastHit hit)
     {
         laser.SetActive(true);

@@ -62,6 +62,10 @@ public class StationManager : MonoBehaviour
         SaveLoadManager.SaveToFile(json, fileName);
     }
 
+    /// <summary>
+    /// Loads project from file
+    /// </summary>
+    /// <param name="fileName">name of file to be loaded from</param>
     public void Load(string fileName)
     {
         string json = SaveLoadManager.LoadFromFile(fileName);

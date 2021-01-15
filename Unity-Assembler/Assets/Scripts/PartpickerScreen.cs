@@ -58,12 +58,10 @@ public class PartpickerScreen : MonoBehaviour
         {
             foreach (Part part in pickedpartsList)
             {
-                //instantiate item ans set parent
-                GameObject SpawnedItem = Instantiate(mListItem, mListItemSpawnpoint.transform, false);
-                //get ItemDetails Component
-                ItemDetails itemDetails = SpawnedItem.GetComponent<ItemDetails>();
-                //set name
-                itemDetails.text.text = part.Name;
+                //instantiate item and set parent
+                GameObject spawnedItem = Instantiate(mListItem, mListItemSpawnpoint.transform, false);
+                //set text to part name
+                spawnedItem.GetComponentInChildren<Text>().text = part.Name;
             }
         }
     }

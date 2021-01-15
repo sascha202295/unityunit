@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using Valve.VR;
 
@@ -65,7 +62,7 @@ public class VRInputModule : BaseInputModule
         GameObject newPointerPress = ExecuteEvents.ExecuteHierarchy(mCurrentObject, data, ExecuteEvents.pointerDownHandler);
 
         // if there is no downhandler, try click handler
-        if(newPointerPress == null)
+        if (newPointerPress == null)
             newPointerPress = ExecuteEvents.GetEventHandler<IPointerClickHandler>(mCurrentObject);
 
         //set data

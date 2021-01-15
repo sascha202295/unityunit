@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2436219459328876527}
   - component: {fileID: 2436219459328876521}
   - component: {fileID: 2436219459328876520}
-  - component: {fileID: -5453004713348616898}
   m_Layer: 0
   m_Name: PartPickerListItem
   m_TagString: Untagged
@@ -76,19 +75,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-5453004713348616898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2436219459328876526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d6226d67774465469eb7fdde5620eea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 2436219459399776967}
 --- !u!1 &2436219459399776965
 GameObject:
   m_ObjectHideFlags: 0

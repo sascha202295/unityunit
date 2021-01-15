@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
-
+/// <summary>
+/// controls the laserpointer for teleportation
+/// </summary>
 public class LaserTeleport : MonoBehaviour
 {
     public SteamVR_Input_Sources handType;
@@ -24,22 +26,21 @@ public class LaserTeleport : MonoBehaviour
     public LayerMask teleportMask;
     private bool shouldTeleport;
 
-    // Start is called before the first frame update
     void Start()
     {
+        // setup laser
         laser = Instantiate(laserPrefab);
         laserTransform = laser.transform;
         reticle = Instantiate(teleportReticlePrefab);
         teleportReticleTransform = reticle.transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (teleportAction.GetState(handType))
         {
             RaycastHit hit;
-
+            // look up where the ray hits a teleportable surface and display laser
             if (Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, 100, teleportMask))
             {
                 hitPoint = hit.point;
@@ -51,9 +52,11 @@ public class LaserTeleport : MonoBehaviour
         }
         else
         {
+            // if teleport button is not pressed, do not display laser
             laser.SetActive(false);
             reticle.SetActive(false);
         }
+        // check if there is a valid teleport point when teleport-button us released
         if (teleportAction.GetStateUp(handType) && shouldTeleport)
         {
             Teleport();
@@ -61,6 +64,10 @@ public class LaserTeleport : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// shows laser at given hitpoint
+    /// </summary>
+    /// <param name="hit">lasers hitpoint</param>
     private void ShowLaser(RaycastHit hit)
     {
         laser.SetActive(true);
@@ -71,6 +78,9 @@ public class LaserTeleport : MonoBehaviour
                                                 hit.distance);
     }
 
+    /// <summary>
+    /// moves the camerrig to the teleport position
+    /// </summary>
     private void Teleport()
     {
         shouldTeleport = false;

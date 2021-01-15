@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
+/// <summary>
+/// attached to model parts, allows to place parts
+/// </summary>
 public class ProductAssemblyCollider : MonoBehaviour
 {
     public SteamVR_Input_Sources mHandType;
@@ -31,6 +34,9 @@ public class ProductAssemblyCollider : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// mark this Object as a placed part
+    /// </summary>
     private void PlaceObject()
     {
         Utils.SetObjectMaterial(transform, placedPartMaterial);
@@ -50,7 +56,6 @@ public class ProductAssemblyCollider : MonoBehaviour
         else if (col.transform.name.Replace("(Clone)", "").Equals(transform.name))
         {
             collidingObject = col.gameObject;
-
             // set Color to green
             Utils.SetObjectColor(transform, new Color(0f, 1f, 0f, 0.4f));
         }

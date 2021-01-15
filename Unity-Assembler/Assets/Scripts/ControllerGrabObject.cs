@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
+/// <summary>
+/// allows Controller this behaviour is attached to to grab Objects
+/// </summary>
 public class ControllerGrabObject : MonoBehaviour
 {
     public SteamVR_Input_Sources mHandType;
@@ -44,6 +47,7 @@ public class ControllerGrabObject : MonoBehaviour
     {
         objectInHand = collidingObject;
         collidingObject = null;
+        // connect grabbed object via FixedJoint to the Controller
         var joint = AddFixedJoint();
         objectInHand.GetComponent<Rigidbody>().isKinematic = false;
         joint.connectedBody = objectInHand.GetComponent<Rigidbody>();
@@ -59,10 +63,12 @@ public class ControllerGrabObject : MonoBehaviour
 
     private void ReleaseObject()
     {
+        // destroy FixedJoint connecting the Object to the controller
         if (GetComponent<FixedJoint>())
         {
             GetComponent<FixedJoint>().connectedBody = null;
             Destroy(GetComponent<FixedJoint>());
+            // preserve objects velocity when releasing it
             objectInHand.GetComponent<Rigidbody>().velocity = mControllerPose.GetVelocity();
             objectInHand.GetComponent<Rigidbody>().angularVelocity = mControllerPose.GetAngularVelocity();
         }

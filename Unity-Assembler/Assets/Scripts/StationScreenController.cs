@@ -35,6 +35,9 @@ public class StationScreenController : MonoBehaviour
         partHolder.transform.position = transform.root.position;
     }
 
+    /// <summary>
+    /// Updates the Screens ScrollView
+    /// </summary>
     private void UpdateScrollView()
     {
         // delete preexisting items
@@ -60,6 +63,10 @@ public class StationScreenController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// called when ScrollView item of this screen is clicked
+    /// </summary>
+    /// <param name="button">the ScrollView item that was clicked on</param>
     public void ItemClicked(GameObject button)
     {
         string tmp = button.GetComponentInChildren<Text>().text;
@@ -99,11 +106,18 @@ public class StationScreenController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Part was placed
+    /// </summary>
+    /// <param name="part">placed Part</param>
     public void PartPlaced(Part part)
     {
         station.PartPlaced(part);
     }
 
+    /// <summary>
+    /// Resets build progress of this station
+    /// </summary>
     public void ResetStation()
     {
         partList = new List<Part>(station.PartList);

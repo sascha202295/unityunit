@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Utils
 {
-    /***
-     * sets the color of the given Transform and its direct childrens Renderers to the given Color 
-     */
+    /// <summary>
+    /// sets the color of the given Transform and its direct childrens Renderers to the given Color 
+    /// </summary>
     public static void SetObjectColor(Transform mTransform, Color color)
     {
         if (mTransform.childCount > 0)
@@ -28,9 +28,9 @@ public class Utils
         }
     }
 
-    /***
-     * sets the material of the given Transform and its direct childrens Renderers to the given material 
-     */
+    /// <summary>
+    /// sets the material of the given Transform and its direct childrens Renderers to the given material
+    /// </summary>
     public static void SetObjectMaterial(Transform mTransform, Material mMaterial)
     {
         if (mTransform.childCount > 0)
@@ -46,9 +46,9 @@ public class Utils
         }
     }
 
-    /***
-     * Destroys all MeshCollider components of the given Transform
-     */
+    /// <summary>
+    /// Destroys all MeshCollider components of the given Transform
+    /// </summary>
     public static void RemoveAllMeshColliders(Transform transform)
     {
         MeshCollider[] colliders = transform.GetComponents<MeshCollider>();

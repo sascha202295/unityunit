@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Valve.VR;
 
+/// <summary>
+/// Pointer used to Interact with UI and the PartPicker
+/// </summary>
 public class VR_UIPointer : MonoBehaviour
 {
     public float mDefaultLength = 5.0f;
@@ -54,6 +57,7 @@ public class VR_UIPointer : MonoBehaviour
         {
             if (mClickAction.GetStateDown(mTargetSource))
             {
+                // check if hit part is actually a model part
                 if (hit.collider != null && hit.collider.gameObject.transform.parent.GetComponent<ProductAssemblyController>() != null)
                 {
                     ProcessPartPicker(hit.collider.gameObject);
@@ -62,15 +66,24 @@ public class VR_UIPointer : MonoBehaviour
         }
     }
 
-    private RaycastHit CreateRaycast(float length)
+    /// <summary>
+    /// create RaycastHit using given max length
+    /// </summary>
+    /// <param name="maxLength">max length</param>
+    /// <returns>hit</returns>
+    private RaycastHit CreateRaycast(float maxLength)
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, transform.forward);
-        Physics.Raycast(ray, out hit, mDefaultLength);
+        Physics.Raycast(ray, out hit, maxLength);
 
         return hit;
     }
 
+    /// <summary>
+    /// processes selection ans deselection of modelparts
+    /// </summary>
+    /// <param name="partGameObject">clicked part</param>
     private void ProcessPartPicker(GameObject partGameObject)
     {
         Part tmp = Part.Parts[partGameObject.transform.GetSiblingIndex()];
@@ -83,6 +96,7 @@ public class VR_UIPointer : MonoBehaviour
         {
             mSelectedParts = new List<Part>();
         }
+        // if part was already selected, remove from selection
         if (mSelectedParts.Contains(tmp))
         {
             // remove item from selection
@@ -91,15 +105,18 @@ public class VR_UIPointer : MonoBehaviour
             mSelectedParts.Remove(tmp);
             partpicker.RemoveItemFromList(tmp);
         }
+        // otherwise add item to selection
         else
         {
-            // add item to selection
             Utils.SetObjectColor(partGameObject.transform, Color.red);
             mSelectedParts.Add(tmp);
             partpicker.AddNewItemToList(tmp);
         }
     }
 
+    /// <summary>
+    /// deselect all selected parts
+    /// </summary>
     public void DeselectParts()
     {
         foreach (Part part in mSelectedParts)

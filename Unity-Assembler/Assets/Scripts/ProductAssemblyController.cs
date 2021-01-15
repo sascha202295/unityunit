@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
+/// <summary>
+/// placed at the root of the model; generates meshcolliders and ProductAssembly Collides for all parts of the model
+/// </summary>
 public class ProductAssemblyController : MonoBehaviour
 {
     public SteamVR_Input_Sources mHandType;
@@ -34,6 +37,9 @@ public class ProductAssemblyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds ProductAssemblyCollider Scripts to all parts of the model
+    /// </summary>
     public void AddProductAssemblyColliders()
     {
         foreach (Transform child in transform)
@@ -44,6 +50,11 @@ public class ProductAssemblyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds MeshCollider to the given GameObject and sets it up as Trigger
+    /// </summary>
+    /// <param name="gObject">GameObject to add the Collider to</param>
+    /// <param name="mesh">mesh of the Collider</param>
     private void AddMeshColliderTriggerTo(GameObject gObject, Mesh mesh)
     {
         MeshCollider collider = gObject.AddComponent<MeshCollider>();

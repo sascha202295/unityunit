@@ -1,14 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Valve.Newtonsoft.Json;
 
+/// <summary>
+/// represents a station
+/// </summary>
 public class Station
 {
+    /// <summary>
+    /// name of the station
+    /// </summary>
     public string Name { get; set; }
+    /// <summary>
+    /// List of Parts in this Station; reflects build order of Parts
+    /// </summary>
     public List<Part> PartList { get; }
+    /// <summary>
+    /// List of Stations this Station is dependant on
+    /// </summary>
     public List<Station> PreviousStations { get; set; }
+    /// <summary>
+    /// position of the Station in the Scene
+    /// </summary>
     public Vector3 Position { get; set; }
+    /// <summary>
+    /// rotation of the Station in the Scene
+    /// </summary>
     public Quaternion Rotation { get; set; }
 
     public Station(List<Part> partList, List<Station> previousStations)
@@ -53,6 +69,9 @@ public class Station
         return PartList.Remove(part);
     }
 
+    /// <summary>
+    /// returns Parts of all previous Stations recursivly
+    /// </summary>
     public List<Part> GetPreviousStationsParts()
     {
         List<Part> tmpParts = new List<Part>();
@@ -67,6 +86,9 @@ public class Station
         return tmpParts;
     }
 
+    /// <summary>
+    /// mark a Part as placed and sort PartList
+    /// </summary>
     public void PartPlaced(Part part)
     {
         part.IsPlaced = true;

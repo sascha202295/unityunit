@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// creates station-GameObjects
+/// </summary>
 public class StationFactory
 {
 
@@ -23,58 +24,63 @@ public class StationFactory
     private GameObject tmpStation;
     private GameObject stationModelPodest;
     private GameObject stationModel;
-    private List<GameObject> modelObjects;
 
     public StationFactory()
     {
         materialTransparent = (Material)Resources.Load("CycleTransparent");
         materialOpaque = (Material)Resources.Load("CycleWhite");
-        modelObjects = new List<GameObject>();
     }
 
+    /// <summary>
+    /// creates a station-GameObject representing the given Station
+    /// </summary>
+    /// <param name="station">the Station to be created</param>
+    /// <param name="ui_Pointer">UI_Pointer reference needed for StationScreen</param>
+    /// <returns>GameObject of created Station</returns>
     public GameObject CreateStation(Station station, GameObject ui_Pointer)
     {
         if (maxNumberOfStations > numberOfStations)
         {
-            //create station object
+            // create station object
             tmpStation = new GameObject("Station" + numberOfStations);
             tmpStation.transform.position = station.Position;
 
             station.Name = "Station" + numberOfStations;
 
+            // create "wrapper" GameObject to contain the station model
             GameObject model = new GameObject();
             model.transform.name = tmpStation.name + " - Model";
             model.transform.parent = tmpStation.transform;
             model.transform.localPosition = stationModelOffset;
 
-            //create station model
+            // create station model podest
             stationModelPodest = GameObject.Instantiate((GameObject)Resources.Load("ModelPrep"), model.transform);
             stationModelPodest.name = "Podest";
             stationModelPodest.transform.localPosition = stationModelPedestalOffset;
             stationModelPodest.transform.localScale = Vector3.Scale(stationModelPodest.transform.localScale, scale);
-
+            // create station model
             stationModel = GameObject.Instantiate((GameObject)Resources.Load("Cyclev2"), model.transform);
             stationModel.transform.localScale = Vector3.Scale(stationModel.transform.localScale, scale);
             stationModel.transform.localPosition = stationModel.transform.localPosition + stationModelModelOffset;
             stationModel.GetComponent<ProductAssemblyController>().AddProductAssemblyColliders();
+            // disable all parts of the loaded model
             foreach (Transform modelPart in stationModel.transform)
             {
                 modelPart.gameObject.SetActive(false);
             }
+            // reenable and set up parts of station
             foreach (Part part in station.PartList)
             {
                 Debug.LogWarning("stmodPC: " + stationModel.transform.childCount + " partID: " + part.PartID);
                 Transform partObject = stationModel.transform.GetChild(part.PartID);
                 partObject.gameObject.SetActive(true);
-                modelObjects.Add(partObject.gameObject);
                 if (part.IsPlaced)
                 {
                     Utils.SetObjectMaterial(partObject, materialOpaque);
                     Utils.SetObjectColor(partObject, new Color(0.2f, 0.2f, 0.2f, 1.0f));
                 }
             }
-
-            // enable parts of previous stations and color them distinctly
+            // reenable and set up parts of previous stations
             foreach (Part part in station.GetPreviousStationsParts())
             {
                 Transform partObject = stationModel.transform.GetChild(part.PartID);
@@ -105,7 +111,12 @@ public class StationFactory
         return tmpStation;
     }
 
-    private void PartsOnTable(GameObject station)
+    /// <summary>
+    /// places given parts on Tables
+    /// </summary>
+    /// <param name="station">the stations gameObject</param>
+    /// <param name="modelObjects">gameObject of parts to be placed</param>
+    private void PartsOnTable(GameObject station, List<GameObject> modelObjects)
     {
         GameObject table_small = (GameObject)Resources.Load("Pref_Station_Small");
         for (int i = 0; i < modelObjects.Count; i++)
