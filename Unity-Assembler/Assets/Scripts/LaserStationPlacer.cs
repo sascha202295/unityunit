@@ -12,6 +12,7 @@ public class LaserStationPlacer : MonoBehaviour
     public SteamVR_Action_Boolean mRotateStationRight;
     public SteamVR_Action_Boolean mRotateStationLeft;
     public GameObject mUIPointer;
+    public float StationPlacementRotationSpeed = 1.0f;
     private bool enableStationPlacement = false;
 
     public GameObject laserPrefab;
@@ -45,13 +46,13 @@ public class LaserStationPlacer : MonoBehaviour
                 stationPreview.SetActive(true);
                 stationPreview.transform.position = hit.point + teleportReticleOffset;
                 //rotate station 
-                if (mRotateStationRight.GetStateDown(mTargetSource))
+                if (mRotateStationRight.GetState(mTargetSource))
                 {
-                    stationPreview.transform.Rotate(0, 5f, 0);
+                    stationPreview.transform.Rotate(0, StationPlacementRotationSpeed, 0);
                 }
-                else if (mRotateStationLeft.GetStateDown(mTargetSource)) 
+                else if (mRotateStationLeft.GetState(mTargetSource)) 
                 {
-                    stationPreview.transform.Rotate(0, -5f, 0);
+                    stationPreview.transform.Rotate(0, -StationPlacementRotationSpeed, 0);
                 }
             }
             else

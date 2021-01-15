@@ -83,20 +83,27 @@ public class PartpickerScreen : MonoBehaviour
 
     public void CreateStation()
     {
-        //if (previousStationController.IsSelectionConfirmed())
-        GameObject partPickerModel = transform.parent.GetComponent<StationManager>().PartPickerModel;
+        // if there are no selected parts, no station will be selected
+        if(pickedpartsList == null && pickedpartsList.Count == 0)
+        {
+            return;
+        }
 
         Station station = new Station(pickedpartsList, previousStationController.GetChosenStations());
         laserStationPlacer.EnableStationPlacer(station);
         mUiPointer.SetActive(false);
         VR_UIPointer tmpUiPointer = mUiPointer.GetComponent<VR_UIPointer>();
         tmpUiPointer.DeselectParts();
+
+        // Mark picked parts in the PartPicker model
+        GameObject partPickerModel = transform.parent.GetComponent<StationManager>().PartPickerModel;
         foreach (Part part in pickedpartsList)
         {
             Utils.SetObjectMaterial(partPickerModel.transform.GetChild(part.PartID), materialTransparent);
             Utils.SetObjectColor(partPickerModel.transform.GetChild(part.PartID), new Color(0f, 1f, 0f, 0.1f));
             Utils.RemoveAllMeshColliders(partPickerModel.transform.GetChild(part.PartID));
         }
+
         pickedpartsList = null;
         stationManager.AddStation(station);
         previousStationController.SetStationList(stationManager.Stations);
